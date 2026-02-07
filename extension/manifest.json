@@ -1,0 +1,18 @@
+{
+    "name": "Read Me",
+    "description": "Dont worry about it",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "logo.png"
+    },
+    "content_scripts": [
+      {
+        "js": ["scripts/polling.js"],
+        "matches": [
+          "<all_urls>"
+        ]
+      }
+    ]
+}
