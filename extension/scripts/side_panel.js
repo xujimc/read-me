@@ -1,4 +1,5 @@
-const articlesContainer = document.getElementById('articles');
+const contentEl = document.getElementById('content');
+const headerEl = document.getElementById('header');
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -18,14 +19,31 @@ const ctaHtml = `
   </div>
 `;
 
-function renderArticles(articles) {
+// ===== BLOG VIEW =====
+function renderBlogView(tab) {
+  headerEl.textContent = 'Article View';
+  contentEl.className = 'blog-view';
+  contentEl.innerHTML = `
+    <div class="blog-title">${tab.title || 'Loading...'}</div>
+    <div class="summary-card">
+      <div class="summary-label">Summary</div>
+      <div class="summary-text">Summary will appear here once connected to Gemini API.</div>
+    </div>
+  ` + debugHtml;
+}
+
+// ===== ARTICLES VIEW =====
+function renderArticlesView(articles) {
+  headerEl.textContent = 'The Keyword';
+  contentEl.className = 'articles';
+
   const unopened = (articles || []).filter(a => !a.opened);
   if (unopened.length === 0) {
-    articlesContainer.innerHTML = '<div class="empty">No new articles</div>' + ctaHtml + debugHtml;
+    contentEl.innerHTML = '<div class="empty">No new articles</div>' + ctaHtml + debugHtml;
     return;
   }
 
-  articlesContainer.innerHTML = unopened.map(article => `
+  contentEl.innerHTML = unopened.map(article => `
     <div class="card" data-link="${article.link}">
       ${article.image ? `<img class="card-image" src="${article.image}" alt="">` : ''}
       <div class="card-content">
@@ -41,19 +59,12 @@ function renderArticles(articles) {
     </div>
   `).join('') + ctaHtml + debugHtml;
 
-  // Add click handlers
+  // Add click handlers for article cards
   document.querySelectorAll('.card[data-link]').forEach(card => {
     card.addEventListener('click', async () => {
       const link = card.dataset.link;
       if (link) {
-        const newTab = await chrome.tabs.create({ url: link });
-        // Switch side panel for the new tab
-        await chrome.sidePanel.setOptions({
-          tabId: newTab.id,
-          path: 'side_panel_blog.html',
-          enabled: true
-        });
-        chrome.sidePanel.open({ tabId: newTab.id });
+        await chrome.tabs.create({ url: link });
         // Mark as opened
         const { storedArticles = [] } = await chrome.storage.sync.get(['storedArticles']);
         const article = storedArticles.find(a => a.link === link);
@@ -66,20 +77,43 @@ function renderArticles(articles) {
   });
 }
 
-// Load articles from storage
-chrome.storage.sync.get(['storedArticles'], (data) => {
-  renderArticles(data.storedArticles);
+// ===== RENDER BASED ON TAB =====
+async function render() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  if (tab?.url) {
+    const url = new URL(tab.url);
+    if (url.hostname === 'blog.google') {
+      renderBlogView(tab);
+      return;
+    }
+  }
+
+  // Default: articles view
+  const { storedArticles } = await chrome.storage.sync.get(['storedArticles']);
+  renderArticlesView(storedArticles);
+}
+
+// Initial render
+render();
+
+// Re-render when tab changes
+chrome.tabs.onActivated.addListener(() => render());
+
+// Re-render when tab URL/title updates
+chrome.tabs.onUpdated.addListener((tabId, info) => {
+  if (info.url || info.title) render();
 });
 
-// Listen for storage changes
+// Re-render when storage changes (for articles view)
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'sync' && changes.storedArticles) {
-    renderArticles(changes.storedArticles.newValue);
+    render();
   }
 });
 
 // Debug: clear storage
-articlesContainer.addEventListener('click', (e) => {
+contentEl.addEventListener('click', (e) => {
   if (e.target.id === 'debug-clear') {
     chrome.storage.sync.clear();
   }

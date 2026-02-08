@@ -120,11 +120,40 @@
     .debug-btn:hover {
       color: #999;
     }
+    /* Blog view */
+    .blog-view {
+      padding: 16px;
+    }
+    .blog-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    .summary-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .summary-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #1a73e8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .summary-text {
+      font-size: 14px;
+      color: #202124;
+      line-height: 1.6;
+    }
     </style>
 </head>
 <body>
-  <div class="header">The Keyword</div>
-  <div class="articles" id="articles">
+  <div class="header" id="header">The Keyword</div>
+  <div id="content" class="articles">
     <div class="empty">Loading articles...</div>
   </div>
   <script src="scripts/side_panel.js"></script>

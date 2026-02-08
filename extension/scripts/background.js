@@ -91,3 +91,4 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.storage.sync.set({ unopenedCount: 0 });
   chrome.sidePanel.open({ windowId: tab.windowId });
 });
+
