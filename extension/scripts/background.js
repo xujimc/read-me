@@ -1,9 +1,15 @@
-const POLL_INTERVAL_MINUTES = 5;
+const POLL_INTERVAL_MINUTES = 1;
 const SERVER_URL = 'https://your-server.com/api/check'; // Replace with your server URL
 
 // Setup alarm on install
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create('pollServer', { periodInMinutes: POLL_INTERVAL_MINUTES });
+
+  // Test badge after 3 seconds
+  setTimeout(() => {
+    chrome.action.setBadgeText({ text: '!' });
+    chrome.action.setBadgeBackgroundColor({ color: '#dc2626' });
+  }, 3000);
 });
 
 // Setup alarm on startup
@@ -19,22 +25,18 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 async function checkServer() {
-  try {
-    const response = await fetch(SERVER_URL);
-    const data = await response.json();
+  // try {
+  //   const response = await fetch(SERVER_URL);
+  //   const data = await response.json();
 
-    if (data.hasNewArticle) {
-      chrome.action.setBadgeText({ text: '!' });
-      chrome.action.setBadgeBackgroundColor({ color: '#dc2626' });
-
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab) {
-        chrome.sidePanel.open({ windowId: tab.windowId });
-      }
-    }
-  } catch (error) {
-    console.error('Polling error:', error);
-  }
+  //   if (data.hasNewArticle) {
+  //     // Show badge to notify user
+  //     chrome.action.setBadgeText({ text: '!' });
+  //     chrome.action.setBadgeBackgroundColor({ color: '#dc2626' });
+  //   }
+  // } catch (error) {
+  //   console.error('Polling error:', error);
+  // }
 }
 
 // Open side panel on icon click

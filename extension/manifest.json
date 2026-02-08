@@ -1,33 +1,19 @@
 {
-    "name": "Read Me",
-    "description": "Dont worry about it",
-    "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-      "default_icon": "logo.png"
-    },
-    "background": {
-      "service_worker": "scripts/background.js"
-    },
-    "permissions": [
-      "sidePanel",
-      "alarms"
-    ],
-    "side_panel": {
-      "default_path": "side_panel.html"
-    },
-    "content_scripts": [
-      {
-        "js": ["scripts/polling.js"],
-        "matches": [
-          "<all_urls>"
-        ]
-      },
-      {
-        "js": ["scripts/annotations.js"],
-        "matches":[
-          "https://blog.google/innovation-and-ai/*"
-        ]
-      }
-    ]
+  "name": "Read Me",
+  "description": "Dont worry about it",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": "logo.png"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "permissions": [
+    "sidePanel",
+    "alarms"
+  ],
+  "side_panel": {
+    "default_path": "side_panel.html"
+  }
 }
