@@ -17,7 +17,8 @@ function formatDate(dateString) {
 }
 
 export function renderArticlesView(contentEl, headerEl, articles) {
-  headerEl.textContent = 'The Keyword';
+  const titleEl = headerEl.querySelector('.header-title');
+  if (titleEl) titleEl.textContent = 'The Keyword';
   contentEl.className = 'articles';
 
   const unopened = (articles || []).filter(a => !a.opened);

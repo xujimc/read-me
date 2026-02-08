@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from questions import generate_questions
 from feedback import generate_feedback
+from narrate import generate_narration
 from cache import get_cached_questions, cache_questions
 
 
@@ -58,6 +59,20 @@ def feedback():
     fb = generate_feedback(article_text, answers)
     print(f"[/feedback] Done")
     return jsonify({"feedback": fb})
+
+
+@app.post("/narrate")
+def narrate():
+    body = request.get_json() or {}
+    article_text = body.get("article_text", "")
+
+    if not article_text:
+        return jsonify({"error": "article_text required"}), 400
+
+    print(f"[/narrate] Calling LLM to generate speech...")
+    speech = generate_narration(article_text)
+    print(f"[/narrate] Done")
+    return jsonify({"speech": speech})
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import { fetchQuestions, fetchFeedback } from '../api.js';
+import { fetchQuestions, fetchFeedback, fetchNarration } from '../api.js';
 import { getQuizData, saveQuizData } from '../storage.js';
 
 const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
@@ -30,7 +30,8 @@ async function persistState(url) {
 }
 
 export async function renderBlogView(contentEl, headerEl, tab, isTracked) {
-  headerEl.textContent = 'Article View';
+  const titleEl = headerEl.querySelector('.header-title');
+  if (titleEl) titleEl.textContent = 'Article View';
   contentEl.className = 'blog-view';
 
   if (!isTracked) {
@@ -125,6 +126,11 @@ async function loadQuiz(contentEl, tab) {
     showError(contentEl, 'Could not extract article text. Try refreshing the page.');
     return;
   }
+
+  // Fetch narration in the background (fire-and-forget)
+  fetchNarration(state.articleText)
+    .then(data => console.log('[Narration]', data.speech))
+    .catch(err => console.error('[Narration error]', err));
 
   // Generate questions
   loadingByUrl.set(url, 'Generating questions...');

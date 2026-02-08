@@ -14,7 +14,7 @@
       color: #202124;
     }
     .header {
-      padding: 20px 24px;
+      padding: 16px 24px;
       font-size: 13px;
       font-weight: 500;
       color: #5f6368;
@@ -22,6 +22,28 @@
       letter-spacing: 0.5px;
       background: #fff;
       border-bottom: 1px solid #e8eaed;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .model-badge {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 100px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .model-badge.connected {
+      background: #e6f4ea;
+      color: #137333;
+    }
+    .model-badge.offline {
+      background: #fce8e6;
+      color: #c5221f;
+    }
+    .header-title {
+      flex-shrink: 0;
     }
     .articles {
       padding: 16px;
@@ -481,7 +503,9 @@
   </style>
 </head>
 <body>
-  <div class="header" id="header">The Keyword</div>
+  <div class="header" id="header">
+    <span class="header-title">The Keyword</span>
+  </div>
   <div id="content" class="articles">
     <div class="empty">Loading articles...</div>
   </div>

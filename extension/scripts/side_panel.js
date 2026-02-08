@@ -1,8 +1,32 @@
 import { renderBlogView } from './views/blog.js';
 import { renderArticlesView } from './views/articles.js';
+import { fetchModel } from './api.js';
 
 const contentEl = document.getElementById('content');
 const headerEl = document.getElementById('header');
+
+// Fetch and display model info
+async function updateModelIndicator() {
+  const model = await fetchModel();
+  let indicator = document.getElementById('model-indicator');
+
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.id = 'model-indicator';
+    headerEl.appendChild(indicator);
+  }
+
+  if (model) {
+    indicator.textContent = model;
+    indicator.className = 'model-badge connected';
+  } else {
+    indicator.textContent = 'offline';
+    indicator.className = 'model-badge offline';
+  }
+}
+
+// Update model on load
+updateModelIndicator();
 
 // ===== RENDER BASED ON TAB =====
 async function render() {
