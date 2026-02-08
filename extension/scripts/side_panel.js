@@ -1,82 +1,49 @@
-const passagesContainer = document.getElementById('passages');
-const clearBtn = document.getElementById('clearBtn');
+const articlesContainer = document.getElementById('articles');
 
-let passages = [];
-
-// Load saved passages on startup
-chrome.storage.local.get(['savedPassages', 'currentPassage'], (data) => {
-  passages = data.savedPassages || [];
-
-  // If there's a new passage, add it
-  if (data.currentPassage) {
-    addPassage(data.currentPassage);
-    // Clear current passage so it doesn't re-add on refresh
-    chrome.storage.local.remove('currentPassage');
-  }
-
-  renderPassages();
-});
-
-// Listen for new passages
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.currentPassage && changes.currentPassage.newValue) {
-    addPassage(changes.currentPassage.newValue);
-    renderPassages();
-    // Clear current passage
-    chrome.storage.local.remove('currentPassage');
-  }
-});
-
-function addPassage(passage) {
-  // Avoid duplicates (same text)
-  if (!passages.some(p => p.text === passage.text)) {
-    passages.unshift(passage);
-    savePassages();
-  }
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 }
 
-function savePassages() {
-  chrome.storage.local.set({ savedPassages: passages });
-}
-
-function renderPassages() {
-  if (passages.length === 0) {
-    passagesContainer.innerHTML = `
-      <div class="empty-state">
-        Click on any paragraph in a blog article to save it here.
-      </div>
-    `;
-    clearBtn.style.display = 'none';
+function renderArticles(articles) {
+  if (!articles || articles.length === 0) {
+    articlesContainer.innerHTML = '<div class="empty">No articles found</div>';
     return;
   }
 
-  clearBtn.style.display = 'block';
-
-  passagesContainer.innerHTML = passages.map((p, i) => `
-    <div class="passage-card ${i === 0 ? 'latest' : ''}">
-      ${i === 0 ? '<span class="passage-badge">Latest</span>' : ''}
-      <div class="passage-text">${escapeHtml(p.text.substring(0, 200))}${p.text.length > 200 ? '...' : ''}</div>
-      <div class="passage-time">${formatTime(p.timestamp)}</div>
+  articlesContainer.innerHTML = articles.map(article => `
+    <div class="card" data-link="${article.link}">
+      ${article.image ? `<img class="card-image" src="${article.image}" alt="">` : ''}
+      <div class="card-content">
+        <div class="card-category">${article.category}</div>
+        <div class="card-title">${article.title}</div>
+        <div class="card-meta">
+          <span class="card-author">${article.author ? `By ${article.author} - ` : ''}${formatDate(article.pubDate)}</span>
+          <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </div>
     </div>
   `).join('');
+
+  // Add click handlers
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const link = card.dataset.link;
+      if (link) chrome.tabs.create({ url: link });
+    });
+  });
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// Load articles from storage
+chrome.storage.sync.get(['storedArticles'], (data) => {
+  renderArticles(data.storedArticles);
+});
 
-function formatTime(timestamp) {
-  const diff = Date.now() - timestamp;
-  if (diff < 60000) return 'Just now';
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-  return new Date(timestamp).toLocaleDateString();
-}
-
-clearBtn.addEventListener('click', () => {
-  passages = [];
-  savePassages();
-  renderPassages();
+// Listen for storage changes
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && changes.storedArticles) {
+    renderArticles(changes.storedArticles.newValue);
+  }
 });

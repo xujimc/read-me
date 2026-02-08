@@ -11,7 +11,8 @@
   },
   "permissions": [
     "sidePanel",
-    "alarms"
+    "alarms",
+    "storage"
   ],
   "side_panel": {
     "default_path": "side_panel.html"
