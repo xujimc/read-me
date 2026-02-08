@@ -1,7 +1,11 @@
+import os
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# Persistent storage directory
+PERSIST_DIR = os.path.join(os.path.dirname(__file__), '.vectorstore')
 
 # Chunking config
 splitter = RecursiveCharacterTextSplitter(
@@ -14,8 +18,12 @@ embeddings = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001"
 )
 
-# In-memory vector store
-vector_store = InMemoryVectorStore(embeddings)
+# Persistent vector store using Chroma
+vector_store = Chroma(
+    persist_directory=PERSIST_DIR,
+    embedding_function=embeddings,
+    collection_name="articles",
+)
 
 def store_article(article_text: str) -> int:
     chunks = splitter.split_text(article_text)

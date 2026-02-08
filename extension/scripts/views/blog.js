@@ -1,18 +1,33 @@
 import { fetchQuestions, fetchFeedback } from '../api.js';
+import { getQuizData, saveQuizData } from '../storage.js';
 
 const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
 
-// State per URL
+// In-memory cache (synced with chrome.storage.local)
 const stateByUrl = new Map();
 
-function getState(url) {
+async function getState(url) {
   if (!stateByUrl.has(url)) {
-    stateByUrl.set(url, { articleText: '', questions: [], answers: {} });
+    // Load from persistent storage
+    const stored = await getQuizData(url);
+    stateByUrl.set(url, {
+      articleText: stored.articleText || '',
+      questions: stored.questions || [],
+      answers: stored.answers || {},
+      feedback: stored.feedback || {},
+    });
   }
   return stateByUrl.get(url);
 }
 
-export function renderBlogView(contentEl, headerEl, tab, isTracked) {
+async function persistState(url) {
+  const state = stateByUrl.get(url);
+  if (state) {
+    await saveQuizData(url, state);
+  }
+}
+
+export async function renderBlogView(contentEl, headerEl, tab, isTracked) {
   headerEl.textContent = 'Article View';
   contentEl.className = 'blog-view';
 
@@ -32,22 +47,27 @@ export function renderBlogView(contentEl, headerEl, tab, isTracked) {
     <div class="blog-title">${tab.title || 'Loading...'}</div>
     <div class="summary-card">
       <div class="summary-label">Quiz</div>
-      <div class="summary-text" id="quiz-status">Loading article content...</div>
+      <div class="summary-text" id="quiz-status">Loading...</div>
     </div>
   ` + debugHtml;
 
   // Start the quiz flow
-  loadQuiz(contentEl, tab);
+  await loadQuiz(contentEl, tab);
 }
 
 async function loadQuiz(contentEl, tab) {
   const statusEl = document.getElementById('quiz-status');
   const url = tab.url;
-  const state = getState(url);
+  const state = await getState(url);
 
-  // If we already have questions for this URL, render them
+  // If we already have questions (from storage or memory), render them
   if (state.questions.length > 0) {
-    renderQuestions(contentEl, url);
+    // If we have feedback, show completed state
+    if (Object.keys(state.feedback).length > 0) {
+      renderQuestionsWithFeedback(contentEl, url, state);
+    } else {
+      renderQuestions(contentEl, url, state);
+    }
     return;
   }
 
@@ -62,7 +82,7 @@ async function loadQuiz(contentEl, tab) {
       break;
     } catch (e) {
       if (attempt < 4) {
-        await new Promise(r => setTimeout(r, 500)); // Wait 500ms before retry
+        await new Promise(r => setTimeout(r, 500));
       } else {
         statusEl.textContent = 'Please refresh the page and try again.';
         return;
@@ -78,20 +98,27 @@ async function loadQuiz(contentEl, tab) {
 
   // Step 2: Send to server and get questions
   statusEl.textContent = 'Generating questions...';
-  const data = await fetchQuestions(state.articleText);
-  state.questions = data.questions || [];
+  try {
+    const data = await fetchQuestions(state.articleText);
+    state.questions = data.questions || [];
+  } catch (error) {
+    statusEl.textContent = `Error: ${error.message}`;
+    return;
+  }
 
   if (state.questions.length === 0) {
     statusEl.textContent = 'No questions generated. Try again later.';
     return;
   }
 
+  // Save questions to persistent storage
+  await persistState(url);
+
   // Step 3: Render questions UI
-  renderQuestions(contentEl, url);
+  renderQuestions(contentEl, url, state);
 }
 
-function renderQuestions(contentEl, url) {
-  const state = getState(url);
+function renderQuestions(contentEl, url, state) {
   const questionsHtml = state.questions.map((q, i) => `
     <div class="question-item">
       <div class="question-number">Question ${i + 1}</div>
@@ -114,23 +141,74 @@ function renderQuestions(contentEl, url) {
     </div>
   ` + debugHtml;
 
-  // Add submit handler
   document.getElementById('submit-answers').addEventListener('click', () => submitAnswers(url));
 }
 
+function renderQuestionsWithFeedback(contentEl, url, state) {
+  const questionsHtml = state.questions.map((q, i) => {
+    const answer = state.answers[q] || '';
+    const feedback = state.feedback[q];
+
+    let feedbackHtml = '';
+    if (feedback) {
+      const { correctness, explanation, improvement } = parseFeedback(feedback);
+      const statusClass = correctness.toLowerCase().includes('incorrect') ? 'incorrect'
+        : correctness.toLowerCase().includes('partial') ? 'partial'
+        : 'correct';
+
+      feedbackHtml = `
+        <div class="feedback-inline ${statusClass}">
+          <div class="feedback-status">${escapeHtml(correctness)}</div>
+          <div class="feedback-explanation">${escapeHtml(explanation)}</div>
+          ${improvement ? `<div class="feedback-improvement"><strong>Tip:</strong> ${escapeHtml(improvement)}</div>` : ''}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="question-item">
+        <div class="question-number">Question ${i + 1}</div>
+        <div class="question-text">${escapeHtml(q)}</div>
+        <div class="answer-display">${escapeHtml(answer) || '<em>No answer provided</em>'}</div>
+        ${feedbackHtml}
+      </div>
+    `;
+  }).join('');
+
+  contentEl.innerHTML = `
+    <div class="quiz-container" data-url="${escapeHtml(url)}">
+      <div class="quiz-header">
+        <div class="quiz-title">Quiz Completed</div>
+        <div class="quiz-subtitle">Your answers and feedback</div>
+      </div>
+      <div class="questions-list">
+        ${questionsHtml}
+      </div>
+      <button class="submit-btn" id="retake-quiz">Retake Quiz</button>
+    </div>
+  ` + debugHtml;
+
+  document.getElementById('retake-quiz').addEventListener('click', async () => {
+    state.answers = {};
+    state.feedback = {};
+    await persistState(url);
+    renderQuestions(contentEl, url, state);
+  });
+}
+
 async function submitAnswers(url) {
-  const state = getState(url);
+  const state = await getState(url);
   const submitBtn = document.getElementById('submit-answers');
   const feedbackContainer = document.getElementById('feedback-container');
 
-  // Collect answers and save to state
+  // Collect answers
   const answers = {};
   document.querySelectorAll('.answer-input').forEach(input => {
     const question = input.dataset.question;
     const answer = input.value.trim();
     if (answer) {
       answers[question] = answer;
-      state.answers[question] = answer; // Persist for tab switching
+      state.answers[question] = answer;
     }
   });
 
@@ -139,6 +217,9 @@ async function submitAnswers(url) {
     return;
   }
 
+  // Save answers immediately
+  await persistState(url);
+
   // Disable button and show loading
   submitBtn.disabled = true;
   submitBtn.textContent = 'Evaluating...';
@@ -146,6 +227,11 @@ async function submitAnswers(url) {
 
   try {
     const data = await fetchFeedback(state.articleText, answers);
+
+    // Store feedback in state
+    state.feedback = data.feedback;
+    await persistState(url);
+
     renderFeedback(data.feedback, feedbackContainer);
     submitBtn.textContent = 'Submitted';
   } catch (error) {
@@ -156,24 +242,28 @@ async function submitAnswers(url) {
   }
 }
 
+function parseFeedback(result) {
+  const lines = result.split('\n');
+  let correctness = '';
+  let explanation = '';
+  let improvement = '';
+
+  lines.forEach(line => {
+    if (line.startsWith('Correctness:')) {
+      correctness = line.replace('Correctness:', '').trim();
+    } else if (line.startsWith('Explanation:')) {
+      explanation = line.replace('Explanation:', '').trim();
+    } else if (line.startsWith('Improvement:')) {
+      improvement = line.replace('Improvement:', '').trim();
+    }
+  });
+
+  return { correctness, explanation, improvement };
+}
+
 function renderFeedback(feedback, container) {
   const feedbackHtml = Object.entries(feedback).map(([question, result]) => {
-    // Parse the feedback result
-    const lines = result.split('\n');
-    let correctness = '';
-    let explanation = '';
-    let improvement = '';
-
-    lines.forEach(line => {
-      if (line.startsWith('Correctness:')) {
-        correctness = line.replace('Correctness:', '').trim();
-      } else if (line.startsWith('Explanation:')) {
-        explanation = line.replace('Explanation:', '').trim();
-      } else if (line.startsWith('Improvement:')) {
-        improvement = line.replace('Improvement:', '').trim();
-      }
-    });
-
+    const { correctness, explanation, improvement } = parseFeedback(result);
     const statusClass = correctness.toLowerCase().includes('incorrect') ? 'incorrect'
       : correctness.toLowerCase().includes('partial') ? 'partial'
       : 'correct';

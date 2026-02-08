@@ -10,6 +10,10 @@ venv/
 # Environment variables
 .env
 
+# Cache and vector store
+.cache/
+.vectorstore/
+
 # IDE
 .idea/
 .vscode/

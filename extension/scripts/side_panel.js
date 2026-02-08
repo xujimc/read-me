@@ -13,7 +13,7 @@ async function render() {
     const url = new URL(tab.url);
     if (url.hostname === 'blog.google') {
       const isTracked = storedArticles.some(a => a.link === tab.url);
-      renderBlogView(contentEl, headerEl, tab, isTracked);
+      await renderBlogView(contentEl, headerEl, tab, isTracked);
       return;
     }
   }
@@ -40,9 +40,10 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-// Debug: clear storage
+// Debug: clear storage (both sync and local)
 contentEl.addEventListener('click', (e) => {
   if (e.target.id === 'debug-clear') {
     chrome.storage.sync.clear();
+    chrome.storage.local.clear();
   }
 });
