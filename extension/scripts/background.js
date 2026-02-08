@@ -60,7 +60,7 @@ async function checkServer() {
       // Stop if we hit the previous newest (we've seen this and everything after)
       if (storedArticles.length && link === storedArticles.at(-1).link) break;
 
-      articlesToAdd.push({ title, link, pubDate, category, image, author });
+      articlesToAdd.push({ title, link, pubDate, category, image, author, opened: false });
     }
 
     // Show badge if there are new articles

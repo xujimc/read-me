@@ -6,16 +6,17 @@ function formatDate(dateString) {
 }
 
 function renderArticles(articles) {
-  if (!articles || articles.length === 0) {
-    articlesContainer.innerHTML = '<div class="empty">No articles found</div>';
+  const unopened = (articles || []).filter(a => !a.opened);
+  if (unopened.length === 0) {
+    articlesContainer.innerHTML = '<div class="empty">No new articles</div>';
     return;
   }
 
-  articlesContainer.innerHTML = articles.map(article => `
+  articlesContainer.innerHTML = unopened.map(article => `
     <div class="card" data-link="${article.link}">
       ${article.image ? `<img class="card-image" src="${article.image}" alt="">` : ''}
       <div class="card-content">
-        <div class="card-category">${article.category}</div>
+        <div class="card-category"><span class="new-badge">New</span>${article.category}</div>
         <div class="card-title">${article.title}</div>
         <div class="card-meta">
           <span class="card-author">${article.author ? `By ${article.author} - ` : ''}${formatDate(article.pubDate)}</span>
@@ -29,9 +30,17 @@ function renderArticles(articles) {
 
   // Add click handlers
   document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', async () => {
       const link = card.dataset.link;
-      if (link) chrome.tabs.create({ url: link });
+      if (link) {
+        chrome.tabs.create({ url: link });
+        const { storedArticles = [] } = await chrome.storage.sync.get(['storedArticles']);
+        const article = storedArticles.find(a => a.link === link);
+        if (article) {
+          article.opened = true;
+          await chrome.storage.sync.set({ storedArticles });
+        }
+      }
     });
   });
 }
