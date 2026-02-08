@@ -27,15 +27,3 @@ def cache_questions(article_text: str, questions: list[str]):
 
     with open(cache_file, 'w') as f:
         json.dump(questions, f)
-
-def is_article_stored(article_text: str) -> bool:
-    """Check if article has been stored in vector store."""
-    _ensure_cache_dir()
-    marker_file = os.path.join(CACHE_DIR, f'stored_{_hash_text(article_text)}')
-    return os.path.exists(marker_file)
-
-def mark_article_stored(article_text: str):
-    """Mark article as stored in vector store."""
-    _ensure_cache_dir()
-    marker_file = os.path.join(CACHE_DIR, f'stored_{_hash_text(article_text)}')
-    open(marker_file, 'w').close()

@@ -10,9 +10,8 @@ venv/
 # Environment variables
 .env
 
-# Cache and vector store
+# Cache
 .cache/
-.vectorstore/
 
 # IDE
 .idea/
