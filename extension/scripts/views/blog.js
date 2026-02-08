@@ -6,9 +6,11 @@ const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
 // In-memory cache (synced with chrome.storage.local)
 const stateByUrl = new Map();
 
+// Track loading state per URL (not persisted, just in-memory)
+const loadingByUrl = new Map();
+
 async function getState(url) {
   if (!stateByUrl.has(url)) {
-    // Load from persistent storage
     const stored = await getQuizData(url);
     stateByUrl.set(url, {
       articleText: stored.articleText || '',
@@ -42,37 +44,63 @@ export async function renderBlogView(contentEl, headerEl, tab, isTracked) {
     return;
   }
 
-  // Show loading state
+  const url = tab.url;
+  const state = await getState(url);
+
+  // If already loading, show appropriate UI
+  if (loadingByUrl.has(url)) {
+    const loadingStatus = loadingByUrl.get(url);
+
+    // If evaluating and we have questions, show quiz with disabled submit
+    if (loadingStatus.includes('Evaluating') && state.questions.length > 0) {
+      renderQuestions(contentEl, url, state);
+      const submitBtn = document.getElementById('submit-answers');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span>Evaluating...';
+      }
+      return;
+    }
+
+    // Otherwise show spinner
+    contentEl.innerHTML = `
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="loading-text">${loadingStatus}</div>
+      </div>
+    ` + debugHtml;
+    return;
+  }
+
+  // Show loading spinner
   contentEl.innerHTML = `
-    <div class="blog-title">${tab.title || 'Loading...'}</div>
-    <div class="summary-card">
-      <div class="summary-label">Quiz</div>
-      <div class="summary-text" id="quiz-status">Loading...</div>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Preparing your quiz...</div>
     </div>
   ` + debugHtml;
 
-  // Start the quiz flow
   await loadQuiz(contentEl, tab);
 }
 
 async function loadQuiz(contentEl, tab) {
-  const statusEl = document.getElementById('quiz-status');
   const url = tab.url;
   const state = await getState(url);
 
-  // If we already have questions (from storage or memory), render them
+  // If we already have questions, render them
   if (state.questions.length > 0) {
-    // If we have feedback, show completed state
     if (Object.keys(state.feedback).length > 0) {
-      renderQuestionsWithFeedback(contentEl, url, state);
+      renderCompletedQuiz(contentEl, url, state);
     } else {
       renderQuestions(contentEl, url, state);
     }
     return;
   }
 
-  // Step 1: Get article text from content script (with retry)
-  statusEl.textContent = 'Extracting article text...';
+  // Set loading state
+  loadingByUrl.set(url, 'Reading article...');
+  updateLoadingText(contentEl, 'Reading article...');
+
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   let response;
@@ -84,7 +112,8 @@ async function loadQuiz(contentEl, tab) {
       if (attempt < 4) {
         await new Promise(r => setTimeout(r, 500));
       } else {
-        statusEl.textContent = 'Please refresh the page and try again.';
+        loadingByUrl.delete(url);
+        showError(contentEl, 'Please refresh the page and try again.');
         return;
       }
     }
@@ -92,38 +121,67 @@ async function loadQuiz(contentEl, tab) {
   state.articleText = response.text;
 
   if (!state.articleText || state.articleText.length < 100) {
-    statusEl.textContent = 'Could not extract article text. Try refreshing the page.';
+    loadingByUrl.delete(url);
+    showError(contentEl, 'Could not extract article text. Try refreshing the page.');
     return;
   }
 
-  // Step 2: Send to server and get questions
-  statusEl.textContent = 'Generating questions...';
+  // Generate questions
+  loadingByUrl.set(url, 'Generating questions...');
+  updateLoadingText(contentEl, 'Generating questions...');
+
   try {
     const data = await fetchQuestions(state.articleText);
     state.questions = data.questions || [];
   } catch (error) {
-    statusEl.textContent = `Error: ${error.message}`;
+    loadingByUrl.delete(url);
+    showError(contentEl, error.message);
     return;
   }
 
   if (state.questions.length === 0) {
-    statusEl.textContent = 'No questions generated. Try again later.';
+    loadingByUrl.delete(url);
+    showError(contentEl, 'No questions generated. Try again later.');
     return;
   }
 
-  // Save questions to persistent storage
+  loadingByUrl.delete(url);
   await persistState(url);
-
-  // Step 3: Render questions UI
   renderQuestions(contentEl, url, state);
 }
 
+function updateLoadingText(contentEl, text) {
+  const loadingText = contentEl.querySelector('.loading-text');
+  if (loadingText) loadingText.textContent = text;
+}
+
+function showError(contentEl, message) {
+  contentEl.innerHTML = `
+    <div class="quiz-container">
+      <div class="error-message">${escapeHtml(message)}</div>
+    </div>
+  ` + debugHtml;
+}
+
 function renderQuestions(contentEl, url, state) {
+  const answeredCount = Object.keys(state.answers).filter(q => state.answers[q]).length;
+  const totalCount = state.questions.length;
+  const progressPercent = (answeredCount / totalCount) * 100;
+
   const questionsHtml = state.questions.map((q, i) => `
-    <div class="question-item">
-      <div class="question-number">Question ${i + 1}</div>
+    <div class="question-item" data-index="${i}">
+      <div class="question-number">Question ${i + 1} of ${totalCount}</div>
       <div class="question-text">${escapeHtml(q)}</div>
-      <textarea class="answer-input" data-question="${escapeHtml(q)}" placeholder="Type your answer...">${escapeHtml(state.answers[q] || '')}</textarea>
+      <div class="answer-wrapper">
+        <textarea
+          class="answer-input"
+          data-question="${escapeHtml(q)}"
+          data-index="${i}"
+          placeholder="Type your answer..."
+        >${escapeHtml(state.answers[q] || '')}</textarea>
+        <span class="char-count" id="char-count-${i}">${(state.answers[q] || '').length} chars</span>
+      </div>
+      <div class="feedback-slot" id="feedback-${i}"></div>
     </div>
   `).join('');
 
@@ -131,55 +189,107 @@ function renderQuestions(contentEl, url, state) {
     <div class="quiz-container" data-url="${escapeHtml(url)}">
       <div class="quiz-header">
         <div class="quiz-title">Comprehension Quiz</div>
-        <div class="quiz-subtitle">${state.questions.length} questions based on this article</div>
+        <div class="quiz-subtitle">Test your understanding of this article</div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-text">
+          <span>${answeredCount} of ${totalCount} answered</span>
+          <span>${Math.round(progressPercent)}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${progressPercent}%"></div>
+        </div>
       </div>
       <div class="questions-list">
         ${questionsHtml}
       </div>
       <button class="submit-btn" id="submit-answers">Submit Answers</button>
-      <div id="feedback-container"></div>
     </div>
   ` + debugHtml;
 
-  document.getElementById('submit-answers').addEventListener('click', () => submitAnswers(url));
+  // Update progress and char count as user types
+  document.querySelectorAll('.answer-input').forEach(input => {
+    input.addEventListener('input', () => {
+      updateProgress(state);
+      // Update char count
+      const index = input.dataset.index;
+      const charCount = document.getElementById(`char-count-${index}`);
+      if (charCount) {
+        charCount.textContent = `${input.value.length} chars`;
+      }
+    });
+  });
+
+  document.getElementById('submit-answers').addEventListener('click', () => submitAnswers(contentEl, url));
 }
 
-function renderQuestionsWithFeedback(contentEl, url, state) {
+function updateProgress(state) {
+  const inputs = document.querySelectorAll('.answer-input');
+  let answered = 0;
+  inputs.forEach(input => {
+    if (input.value.trim()) answered++;
+  });
+
+  const total = inputs.length;
+  const percent = (answered / total) * 100;
+
+  const progressText = document.querySelector('.progress-text span:first-child');
+  const progressFill = document.querySelector('.progress-fill');
+  const progressPercent = document.querySelector('.progress-text span:last-child');
+
+  if (progressText) progressText.textContent = `${answered} of ${total} answered`;
+  if (progressFill) progressFill.style.width = `${percent}%`;
+  if (progressPercent) progressPercent.textContent = `${Math.round(percent)}%`;
+}
+
+function renderCompletedQuiz(contentEl, url, state) {
+  // Calculate score
+  let correct = 0, partial = 0, incorrect = 0;
+  Object.values(state.feedback).forEach(fb => {
+    const { correctness } = parseFeedback(fb);
+    if (correctness.toLowerCase().includes('incorrect')) incorrect++;
+    else if (correctness.toLowerCase().includes('partial')) partial++;
+    else correct++;
+  });
+  const total = correct + partial + incorrect;
+  const scoreText = `${correct}/${total}`;
+
   const questionsHtml = state.questions.map((q, i) => {
     const answer = state.answers[q] || '';
     const feedback = state.feedback[q];
+    const { correctness, explanation, improvement } = feedback ? parseFeedback(feedback) : {};
 
-    let feedbackHtml = '';
-    if (feedback) {
-      const { correctness, explanation, improvement } = parseFeedback(feedback);
-      const statusClass = correctness.toLowerCase().includes('incorrect') ? 'incorrect'
-        : correctness.toLowerCase().includes('partial') ? 'partial'
-        : 'correct';
+    const statusClass = correctness?.toLowerCase().includes('incorrect') ? 'incorrect'
+      : correctness?.toLowerCase().includes('partial') ? 'partial'
+      : 'correct';
 
-      feedbackHtml = `
-        <div class="feedback-inline ${statusClass}">
-          <div class="feedback-status">${escapeHtml(correctness)}</div>
-          <div class="feedback-explanation">${escapeHtml(explanation)}</div>
-          ${improvement ? `<div class="feedback-improvement"><strong>Tip:</strong> ${escapeHtml(improvement)}</div>` : ''}
-        </div>
-      `;
-    }
+    const icon = statusClass === 'correct' ? '✓' : statusClass === 'partial' ? '~' : '✗';
 
     return `
       <div class="question-item">
         <div class="question-number">Question ${i + 1}</div>
         <div class="question-text">${escapeHtml(q)}</div>
-        <div class="answer-display">${escapeHtml(answer) || '<em>No answer provided</em>'}</div>
-        ${feedbackHtml}
+        <div class="answer-display">${escapeHtml(answer) || '<em>No answer</em>'}</div>
+        ${feedback ? `
+          <div class="feedback-inline ${statusClass}">
+            <div class="feedback-status">
+              <span>${icon}</span>
+              ${escapeHtml(correctness)}
+            </div>
+            <div class="feedback-explanation">${escapeHtml(explanation)}</div>
+            ${improvement ? `<div class="feedback-improvement">${escapeHtml(improvement)}</div>` : ''}
+          </div>
+        ` : ''}
       </div>
     `;
   }).join('');
 
   contentEl.innerHTML = `
     <div class="quiz-container" data-url="${escapeHtml(url)}">
-      <div class="quiz-header">
-        <div class="quiz-title">Quiz Completed</div>
-        <div class="quiz-subtitle">Your answers and feedback</div>
+      <div class="score-card">
+        <div class="score-title">Your Score</div>
+        <div class="score-value">${scoreText}</div>
+        <div class="score-subtitle">${correct} correct, ${partial} partial, ${incorrect} incorrect</div>
       </div>
       <div class="questions-list">
         ${questionsHtml}
@@ -196,10 +306,9 @@ function renderQuestionsWithFeedback(contentEl, url, state) {
   });
 }
 
-async function submitAnswers(url) {
+async function submitAnswers(contentEl, url) {
   const state = await getState(url);
   const submitBtn = document.getElementById('submit-answers');
-  const feedbackContainer = document.getElementById('feedback-container');
 
   // Collect answers
   const answers = {};
@@ -213,36 +322,49 @@ async function submitAnswers(url) {
   });
 
   if (Object.keys(answers).length === 0) {
-    feedbackContainer.innerHTML = `<div class="error-message">Please answer at least one question.</div>`;
+    // Highlight empty inputs briefly
+    document.querySelectorAll('.answer-input').forEach(input => {
+      if (!input.value.trim()) {
+        input.style.borderColor = '#ea4335';
+        setTimeout(() => input.style.borderColor = '', 2000);
+      }
+    });
     return;
   }
 
-  // Save answers immediately
   await persistState(url);
 
-  // Disable button and show loading
+  // Show loading state
+  loadingByUrl.set(url, 'Evaluating your answers...');
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Evaluating...';
-  feedbackContainer.innerHTML = `<div class="loading-message">Analyzing your answers...</div>`;
+  submitBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span>Evaluating...';
 
   try {
     const data = await fetchFeedback(state.articleText, answers);
-
-    // Store feedback in state
     state.feedback = data.feedback;
+    loadingByUrl.delete(url);
     await persistState(url);
 
-    renderFeedback(data.feedback, feedbackContainer);
-    submitBtn.textContent = 'Submitted';
+    // Render completed view with inline feedback
+    renderCompletedQuiz(contentEl, url, state);
   } catch (error) {
     console.error('Feedback error:', error);
-    feedbackContainer.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+    loadingByUrl.delete(url);
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Answers';
+
+    // Show error inline
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.marginTop = '16px';
+    errorDiv.textContent = error.message;
+    submitBtn.parentNode.appendChild(errorDiv);
   }
 }
 
 function parseFeedback(result) {
+  if (!result) return { correctness: '', explanation: '', improvement: '' };
+
   const lines = result.split('\n');
   let correctness = '';
   let explanation = '';
@@ -261,30 +383,8 @@ function parseFeedback(result) {
   return { correctness, explanation, improvement };
 }
 
-function renderFeedback(feedback, container) {
-  const feedbackHtml = Object.entries(feedback).map(([question, result]) => {
-    const { correctness, explanation, improvement } = parseFeedback(result);
-    const statusClass = correctness.toLowerCase().includes('incorrect') ? 'incorrect'
-      : correctness.toLowerCase().includes('partial') ? 'partial'
-      : 'correct';
-
-    return `
-      <div class="feedback-item ${statusClass}">
-        <div class="feedback-question">${escapeHtml(question)}</div>
-        <div class="feedback-status">${escapeHtml(correctness)}</div>
-        <div class="feedback-explanation">${escapeHtml(explanation)}</div>
-        ${improvement ? `<div class="feedback-improvement"><strong>Tip:</strong> ${escapeHtml(improvement)}</div>` : ''}
-      </div>
-    `;
-  }).join('');
-
-  container.innerHTML = `
-    <div class="feedback-header">Your Results</div>
-    ${feedbackHtml}
-  `;
-}
-
 function escapeHtml(text) {
+  if (!text) return '';
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;

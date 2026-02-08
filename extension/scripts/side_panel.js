@@ -28,9 +28,9 @@ render();
 // Re-render when tab changes
 chrome.tabs.onActivated.addListener(() => render());
 
-// Re-render when tab URL/title updates
+// Re-render when tab URL updates (not title - fires too often)
 chrome.tabs.onUpdated.addListener((tabId, info) => {
-  if (info.url || info.title) render();
+  if (info.url) render();
 });
 
 // Re-render when storage changes (for articles view)
