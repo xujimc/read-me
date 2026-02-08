@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from questions import generate_questions
 from feedback import generate_feedback
-from narrate import generate_narration
+from tts import text_to_speech
 from cache import get_cached_questions, cache_questions
 
 
@@ -61,18 +61,18 @@ def feedback():
     return jsonify({"feedback": fb})
 
 
-@app.post("/narrate")
-def narrate():
+@app.post("/tts")
+def tts():
     body = request.get_json() or {}
-    article_text = body.get("article_text", "")
+    text = body.get("text", "")
 
-    if not article_text:
-        return jsonify({"error": "article_text required"}), 400
+    if not text:
+        return jsonify({"error": "text required"}), 400
 
-    print(f"[/narrate] Calling LLM to generate speech...")
-    speech = generate_narration(article_text)
-    print(f"[/narrate] Done")
-    return jsonify({"speech": speech})
+    print(f"[/tts] Converting {len(text)} chars to speech...")
+    audio = text_to_speech(text)
+    print(f"[/tts] Done")
+    return jsonify({"audio": audio})
 
 
 if __name__ == "__main__":

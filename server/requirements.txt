@@ -2,3 +2,4 @@ flask
 flask-cors
 python-dotenv
 langchain-google-genai
+elevenlabs
