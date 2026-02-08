@@ -5,8 +5,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Chunking config
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800,
-    chunk_overlap=120,
+    chunk_size=500,
+    chunk_overlap=80,
 )
 
 # Gemini embeddings model
