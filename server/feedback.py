@@ -1,30 +1,69 @@
 from typing import Dict
+
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.4)
+from rag import vector_store
 
-def generate_feedback(article_text: str, answers: Dict[str, str]) -> Dict[str, str]:
-    feedback = {}
 
-    for question, user_answer in answers.items():
-        prompt = f"""
-You are an expert tutor. Read the article and evaluate the user's answer.
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    temperature=0.4,
+)
 
-ARTICLE:
-{article_text}
+retriever = vector_store.as_retriever(search_kwargs={"k": 4})
 
-QUESTION:
-{question}
 
-USER ANSWER:
-{user_answer}
+def _format_docs(docs) -> str:
+    return "\n\n".join(d.page_content for d in docs)
+
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", """
+You are an expert tutor. Use the article context to evaluate the user's answer.
 
 Respond EXACTLY in this format:
-Correctness: <correct/incorrect/partially correct>
-Explanation: <1-3 sentences>
+Correctness: <correct / partially correct / incorrect>
+Explanation: <1–3 sentences>
 Improvement: <1 concrete suggestion>
-"""
-        resp = llm.invoke(prompt)
-        feedback[question] = (resp.content or "").strip()
+
+Article context:
+{context}
+"""),
+    ("human", """
+Question:
+{question}
+
+User answer:
+{answer}
+""")
+])
+
+
+feedback_chain = (
+    {
+        "context": retriever | _format_docs,
+        "question": lambda x: x["question"],
+        "answer": lambda x: x["answer"],
+    }
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+
+def generate_feedback(
+    article_text: str,
+    answers: Dict[str, str],
+) -> Dict[str, str]:
+
+    feedback = {}
+
+    for question, answer in answers.items():
+        feedback[question] = feedback_chain.invoke({
+            "question": question,
+            "answer": answer,
+        })
 
     return feedback

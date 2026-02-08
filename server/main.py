@@ -1,24 +1,34 @@
-from dotenv import load_dotenv
-load_dotenv()
-
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+
+load_dotenv()
+from rag import store_article
 from questions import generate_questions
 from feedback import generate_feedback
 
+
 app = Flask(__name__)
 
+
 @app.post("/articles")
-def ingest_article():
+def articles():
     body = request.get_json() or {}
-    text = body.get("article_text", "")
-    if not text:
+    article_text = body.get("article_text", "")
+
+    if not article_text:
         return jsonify({"error": "article_text required"}), 400
 
-    questions = generate_questions(text)
-    return jsonify({"questions": questions})
+    chunks = store_article(article_text)
+    questions = generate_questions(article_text)
+
+    return jsonify({
+        "stored_chunks": chunks,
+        "questions": questions,
+    })
+
 
 @app.post("/feedback")
-def feedback_endpoint():
+def feedback():
     body = request.get_json() or {}
     article_text = body.get("article_text", "")
     answers = body.get("answers", {})
@@ -29,5 +39,6 @@ def feedback_endpoint():
     fb = generate_feedback(article_text, answers)
     return jsonify({"feedback": fb})
 
+
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, port=8000)
