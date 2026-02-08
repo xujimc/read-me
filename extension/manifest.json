@@ -16,5 +16,11 @@
   ],
   "side_panel": {
     "default_path": "side_panel.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://blog.google/*"],
+      "js": ["scripts/annotation.js"]
+    }
+  ]
 }
