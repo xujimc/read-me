@@ -11,6 +11,13 @@ from cache import get_cached_questions, cache_questions
 app = Flask(__name__)
 CORS(app, origins="*")
 
+MODEL_NAME = "gemma-3-12b-it"
+
+
+@app.get("/model")
+def get_model():
+    return jsonify({"model": MODEL_NAME})
+
 
 @app.post("/articles")
 def articles():
