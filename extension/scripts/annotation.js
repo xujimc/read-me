@@ -47,5 +47,11 @@ function extractPageText() {
   return text.replace(/\s+/g, ' ').trim();
 }
 
-const pageText = extractPageText();
-console.log('Extracted text length:', pageText);
+// Listen for messages from side panel requesting article text
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'GET_ARTICLE_TEXT') {
+    const pageText = extractPageText();
+    sendResponse({ text: pageText });
+  }
+  return true; // Keep channel open for async response
+});
