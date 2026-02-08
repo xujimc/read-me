@@ -167,7 +167,7 @@ async function prepareQuestionAudios(url, state) {
   try {
     const audios = [];
     for (let i = 0; i < state.questions.length; i++) {
-      const questionText = `Question ${i + 1} of ${state.questions.length}. ${state.questions[i]}`;
+      const questionText = state.questions[i];
       const { audio } = await fetchTTS(questionText);
       audios.push(audio);
       console.log(`[Question ${i + 1} Audio] Ready`);
@@ -466,6 +466,11 @@ async function startVoiceSession(contentEl, url, state) {
       },
       onTranscript: (transcript, isInterim, questionIndex) => {
         updateQuizTranscript(questionIndex, transcript, isInterim);
+        // Save committed (non-interim) transcripts to state
+        if (!isInterim && transcript) {
+          const question = state.questions[questionIndex];
+          state.answers[question] = transcript;
+        }
       },
     });
   } catch (error) {

@@ -14,6 +14,35 @@ function getAudioContext() {
 }
 
 /**
+ * Play a silent buffer to warm up audio system before actual content
+ */
+function playSilentBuffer(durationMs = 500) {
+  return new Promise((resolve) => {
+    try {
+      const ctx = getAudioContext();
+      // Resume context if suspended
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      // Create silent buffer
+      const sampleRate = ctx.sampleRate;
+      const numSamples = Math.floor(sampleRate * (durationMs / 1000));
+      const buffer = ctx.createBuffer(1, numSamples, sampleRate);
+
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.onended = resolve;
+      source.start();
+    } catch (e) {
+      console.log('[VoiceSession] Could not play silent buffer:', e);
+      resolve();
+    }
+  });
+}
+
+/**
  * Play a short beep to indicate listening has started
  */
 function playBeep() {
@@ -87,6 +116,7 @@ class VoiceSession {
       throw new Error('Microphone permission required. Please grant permission and try again.');
     }
 
+
     this.questions = questions;
     this.questionAudios = questionAudios || [];
     this.articleText = articleText;
@@ -125,8 +155,7 @@ class VoiceSession {
       await this.playAudio(questionAudio);
     } else {
       // Fallback: generate on the fly
-      const questionPrompt = `Question ${questionNum} of ${totalQuestions}. ${question}`;
-      await this.speak(questionPrompt);
+      await this.speak(question);
     }
 
     // Play beep to indicate listening has started, then listen for the answer
@@ -299,13 +328,15 @@ class VoiceSession {
   /**
    * Play base64 encoded audio
    */
-  playAudio(base64Audio) {
-    return new Promise((resolve) => {
-      if (!base64Audio) {
-        resolve();
-        return;
-      }
+  async playAudio(base64Audio) {
+    if (!base64Audio) {
+      return;
+    }
 
+    // Play silent buffer to warm up audio system before each playback
+    await playSilentBuffer(2000);
+
+    return new Promise((resolve) => {
       const audioBlob = this.base64ToBlob(base64Audio, 'audio/mpeg');
       const audioUrl = URL.createObjectURL(audioBlob);
 

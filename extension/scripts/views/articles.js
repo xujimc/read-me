@@ -1,15 +1,5 @@
 const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
 
-const ctaHtml = `
-  <div class="card cta-card" id="cta-button">
-    <div class="card-content cta-content">
-      <div class="cta-text">View all articles</div>
-      <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M5 12h14M12 5l7 7-7 7"/>
-      </svg>
-    </div>
-  </div>
-`;
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -23,7 +13,7 @@ export function renderArticlesView(contentEl, headerEl, articles) {
 
   const unopened = (articles || []).filter(a => !a.opened);
   if (unopened.length === 0) {
-    contentEl.innerHTML = '<div class="empty">No new articles</div>' + ctaHtml + debugHtml;
+    contentEl.innerHTML = '<div class="empty">No new articles</div>' + debugHtml;
     return;
   }
 
@@ -41,7 +31,7 @@ export function renderArticlesView(contentEl, headerEl, articles) {
         </div>
       </div>
     </div>
-  `).join('') + ctaHtml + debugHtml;
+  `).join('') + debugHtml;
 
   // Add click handlers for article cards
   document.querySelectorAll('.card[data-link]').forEach(card => {
