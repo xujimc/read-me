@@ -1,20 +1,23 @@
 from typing import Dict
 import re
 from langchain_google_genai import ChatGoogleGenerativeAI
+from config import MODEL_NAME
 
 llm = ChatGoogleGenerativeAI(
-    model="gemma-3-12b-it",
+    model=MODEL_NAME,
     temperature=0.4,
 )
 
 def generate_feedback(article_text: str, answers: Dict[str, str]) -> Dict[str, str]:
     # Build all Q&A pairs into one prompt
     qa_block = "\n\n".join(
-        f"Q{i+1}: {q}\nAnswer: {a}"
+        f"Q{i+1}: {q}\nAnswer: {a if a.strip() else '(no answer provided)'}"
         for i, (q, a) in enumerate(answers.items())
     )
 
     prompt = f"""You are an expert tutor. Evaluate each answer based on the article.
+
+IMPORTANT: If an answer is empty or says "(no answer provided)", mark it as INCORRECT.
 
 For EACH question, respond in this exact format:
 [Q1]

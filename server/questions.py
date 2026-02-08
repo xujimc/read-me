@@ -1,7 +1,8 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
+from config import MODEL_NAME
 
 llm = ChatGoogleGenerativeAI(
-    model="gemma-3-12b-it",
+    model=MODEL_NAME,
     temperature=0.7,
 )
 

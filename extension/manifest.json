@@ -1,8 +1,13 @@
 {
   "name": "Read Me",
-  "description": "Dont worry about it",
+  "description": "An AI-powered reading companion that generates comprehension questions and provides feedback to help you better understand articles.",
   "version": "1.0",
   "manifest_version": 3,
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
   "action": {
     "default_icon": "logo.png"
   },

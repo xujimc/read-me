@@ -7,12 +7,11 @@ from questions import generate_questions
 from feedback import generate_feedback
 from tts import text_to_speech, get_stt_token
 from cache import get_cached_questions, cache_questions
+from config import MODEL_NAME
 
 
 app = Flask(__name__)
 CORS(app, origins="*")
-
-MODEL_NAME = "gemma-3-12b-it"
 
 
 @app.get("/model")
