@@ -5,10 +5,23 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 }
 
+const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
+
+const ctaHtml = `
+  <div class="card cta-card" id="cta-button">
+    <div class="card-content cta-content">
+      <div class="cta-text">View all articles</div>
+      <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </div>
+`;
+
 function renderArticles(articles) {
   const unopened = (articles || []).filter(a => !a.opened);
   if (unopened.length === 0) {
-    articlesContainer.innerHTML = '<div class="empty">No new articles</div>';
+    articlesContainer.innerHTML = '<div class="empty">No new articles</div>' + ctaHtml + debugHtml;
     return;
   }
 
@@ -26,7 +39,7 @@ function renderArticles(articles) {
         </div>
       </div>
     </div>
-  `).join('');
+  `).join('') + ctaHtml + debugHtml;
 
   // Add click handlers
   document.querySelectorAll('.card').forEach(card => {
@@ -54,5 +67,12 @@ chrome.storage.sync.get(['storedArticles'], (data) => {
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'sync' && changes.storedArticles) {
     renderArticles(changes.storedArticles.newValue);
+  }
+});
+
+// Debug: clear storage
+articlesContainer.addEventListener('click', (e) => {
+  if (e.target.id === 'debug-clear') {
+    chrome.storage.sync.clear();
   }
 });
