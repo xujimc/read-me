@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from questions import generate_questions
 from feedback import generate_feedback
-from tts import text_to_speech
+from tts import text_to_speech, get_stt_token
 from cache import get_cached_questions, cache_questions
 
 
@@ -73,6 +73,15 @@ def tts():
     audio = text_to_speech(text)
     print(f"[/tts] Done")
     return jsonify({"audio": audio})
+
+
+@app.get("/stt-token")
+def stt_token():
+    """Generate a single-use token for ElevenLabs real-time STT."""
+    print("[/stt-token] Generating STT token...")
+    token = get_stt_token()
+    print("[/stt-token] Done")
+    return jsonify({"token": token})
 
 
 if __name__ == "__main__":

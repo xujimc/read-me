@@ -1,11 +1,26 @@
 import os
 import base64
+import requests
 from elevenlabs.client import ElevenLabs
 
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
 # Default voice - can be changed to any ElevenLabs voice ID
 DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"  # George - warm, narrative voice
+
+
+def get_stt_token() -> str:
+    """
+    Generate a single-use token for ElevenLabs real-time STT.
+    Token expires after 15 minutes and is consumed on use.
+    """
+    api_key = os.getenv("ELEVENLABS_API_KEY")
+    response = requests.post(
+        "https://api.elevenlabs.io/v1/single-use-token/realtime_scribe",
+        headers={"xi-api-key": api_key},
+    )
+    response.raise_for_status()
+    return response.json()["token"]
 
 
 def text_to_speech(text: str, voice_id: str = DEFAULT_VOICE_ID) -> str:
