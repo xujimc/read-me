@@ -1,5 +1,7 @@
-import { fetchQuestions, fetchFeedback, fetchNarration } from '../api.js';
+import { fetchQuestions, fetchFeedback, fetchTTS } from '../api.js';
 import { getQuizData, saveQuizData } from '../storage.js';
+import { voiceSession, State as VoiceState } from '../voice-session.js';
+import { isSupported as isVoiceSupported } from '../voice.js';
 
 const debugHtml = `<div class="debug-btn" id="debug-clear">clear storage</div>`;
 
@@ -15,6 +17,7 @@ async function getState(url) {
     stateByUrl.set(url, {
       articleText: stored.articleText || '',
       questions: stored.questions || [],
+      questionAudios: stored.questionAudios || [],
       answers: stored.answers || {},
       feedback: stored.feedback || {},
     });
@@ -25,7 +28,9 @@ async function getState(url) {
 async function persistState(url) {
   const state = stateByUrl.get(url);
   if (state) {
-    await saveQuizData(url, state);
+    // Don't persist questionAudios - they're too large and can be regenerated
+    const { questionAudios, ...stateToSave } = state;
+    await saveQuizData(url, stateToSave);
   }
 }
 
@@ -94,6 +99,10 @@ async function loadQuiz(contentEl, tab) {
       renderCompletedQuiz(contentEl, url, state);
     } else {
       renderQuestions(contentEl, url, state);
+      // If we have questions but no audio yet, prepare audio in background
+      if (state.questionAudios.length === 0) {
+        prepareQuestionAudios(url, state);
+      }
     }
     return;
   }
@@ -127,11 +136,6 @@ async function loadQuiz(contentEl, tab) {
     return;
   }
 
-  // Fetch narration in the background (fire-and-forget)
-  fetchNarration(state.articleText)
-    .then(data => console.log('[Narration]', data.speech))
-    .catch(err => console.error('[Narration error]', err));
-
   // Generate questions
   loadingByUrl.set(url, 'Generating questions...');
   updateLoadingText(contentEl, 'Generating questions...');
@@ -154,6 +158,40 @@ async function loadQuiz(contentEl, tab) {
   loadingByUrl.delete(url);
   await persistState(url);
   renderQuestions(contentEl, url, state);
+
+  // Prepare question audios in background
+  prepareQuestionAudios(url, state);
+}
+
+async function prepareQuestionAudios(url, state) {
+  try {
+    const audios = [];
+    for (let i = 0; i < state.questions.length; i++) {
+      const questionText = `Question ${i + 1} of ${state.questions.length}. ${state.questions[i]}`;
+      const { audio } = await fetchTTS(questionText);
+      audios.push(audio);
+      console.log(`[Question ${i + 1} Audio] Ready`);
+      // Update button state after first audio is ready
+      if (i === 0) {
+        state.questionAudios = [audio];
+        updateVoiceButtonState(state);
+      }
+    }
+    state.questionAudios = audios;
+    await persistState(url);
+    updateVoiceButtonState(state);
+  } catch (err) {
+    console.error('[Question Audio error]', err);
+  }
+}
+
+function updateVoiceButtonState(state) {
+  const btn = document.getElementById('start-voice-quiz');
+  if (btn && state.questionAudios.length > 0) {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.voice-btn-text').textContent = 'Start Voice Quiz';
+  }
 }
 
 function updateLoadingText(contentEl, text) {
@@ -191,11 +229,20 @@ function renderQuestions(contentEl, url, state) {
     </div>
   `).join('');
 
+  const voiceSupported = isVoiceSupported();
+  const audioReady = state.questionAudios.length > 0;
+
   contentEl.innerHTML = `
     <div class="quiz-container" data-url="${escapeHtml(url)}">
       <div class="quiz-header">
         <div class="quiz-title">Comprehension Quiz</div>
         <div class="quiz-subtitle">Test your understanding of this article</div>
+        ${voiceSupported ? `
+          <button class="voice-start-btn ${audioReady ? '' : 'loading'}" id="start-voice-quiz" ${audioReady ? '' : 'disabled'}>
+            <span class="voice-btn-icon">🎙️</span>
+            <span class="voice-btn-text">${audioReady ? 'Start Voice Quiz' : 'Preparing audio...'}</span>
+          </button>
+        ` : ''}
       </div>
       <div class="progress-container">
         <div class="progress-text">
@@ -227,6 +274,11 @@ function renderQuestions(contentEl, url, state) {
   });
 
   document.getElementById('submit-answers').addEventListener('click', () => submitAnswers(contentEl, url));
+
+  // Voice quiz button
+  document.getElementById('start-voice-quiz')?.addEventListener('click', () => {
+    startVoiceSession(contentEl, url, state);
+  });
 }
 
 function updateProgress(state) {
@@ -387,6 +439,127 @@ function parseFeedback(result) {
   });
 
   return { correctness, explanation, improvement };
+}
+
+// ===== VOICE SESSION UI =====
+
+let currentContentEl = null;
+let currentUrl = null;
+
+async function startVoiceSession(contentEl, url, state) {
+  currentContentEl = contentEl;
+  currentUrl = url;
+
+  // Check if audio is ready
+  if (state.questionAudios.length === 0) {
+    showError(contentEl, 'Audio not ready yet. Please wait a moment and try again.');
+    return;
+  }
+
+  try {
+    await voiceSession.start({
+      questions: state.questions,
+      questionAudios: state.questionAudios,
+      articleText: state.articleText,
+      onStateChange: (newState, data) => {
+        handleVoiceStateChange(contentEl, url, state, newState, data);
+      },
+      onTranscript: (transcript, isInterim, questionIndex) => {
+        updateQuizTranscript(questionIndex, transcript, isInterim);
+      },
+    });
+  } catch (error) {
+    console.error('[VoiceSession] Failed to start:', error);
+    showError(contentEl, error.message || 'Failed to start voice session. Please check microphone permissions.');
+  }
+}
+
+function handleVoiceStateChange(contentEl, url, state, sessionState, data) {
+  const stateMessages = {
+    [VoiceState.IDLE]: { icon: '🎙️', text: 'Starting...' },
+    [VoiceState.ASKING_QUESTION]: { icon: '❓', text: `Question ${data.questionNum || ''}` },
+    [VoiceState.LISTENING_ANSWER]: { icon: '🎤', text: 'Listening...' },
+    [VoiceState.SUBMITTING]: { icon: '⏳', text: 'Submitting...' },
+    [VoiceState.READING_FEEDBACK]: { icon: '📝', text: 'Reading feedback...' },
+    [VoiceState.PAUSED]: { icon: '⏸️', text: 'Paused' },
+    [VoiceState.DONE]: { icon: '✅', text: 'Complete!' },
+  };
+
+  const { icon, text } = stateMessages[sessionState] || { icon: '🎙️', text: 'Voice Quiz' };
+
+  // For DONE state with results, show completed quiz
+  if (sessionState === VoiceState.DONE && data.answers && data.feedback) {
+    state.answers = data.answers;
+    state.feedback = data.feedback;
+    persistState(url);
+    renderCompletedQuiz(contentEl, url, state);
+    return;
+  }
+
+  // For quiz phase, show the quiz with status banner
+  renderQuizWithVoiceStatus(contentEl, url, state, sessionState, data, icon, text);
+}
+
+function renderQuizWithVoiceStatus(contentEl, url, state, sessionState, data, icon, text) {
+  const totalCount = state.questions.length;
+  const currentIndex = data.questionIndex ?? 0;
+
+  const questionsHtml = state.questions.map((q, i) => {
+    const isActive = i === currentIndex && sessionState === VoiceState.LISTENING_ANSWER;
+    const isPast = i < currentIndex;
+    const answer = state.answers[q] || '';
+
+    return `
+      <div class="question-item ${isActive ? 'voice-active' : ''} ${isPast ? 'voice-answered' : ''}" data-index="${i}">
+        <div class="question-number">Question ${i + 1} of ${totalCount}</div>
+        <div class="question-text">${escapeHtml(q)}</div>
+        <div class="answer-wrapper">
+          <textarea
+            class="answer-input"
+            data-question="${escapeHtml(q)}"
+            data-index="${i}"
+            placeholder="${isActive ? 'Listening...' : 'Your answer will appear here...'}"
+            ${!isActive ? 'readonly' : ''}
+          >${escapeHtml(answer)}</textarea>
+          ${isActive ? '<div class="listening-indicator"><span class="pulse-dot"></span> Listening...</div>' : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  contentEl.innerHTML = `
+    <div class="quiz-container voice-mode" data-url="${escapeHtml(url)}">
+      <div class="voice-status-banner ${sessionState}">
+        <span class="voice-icon">${icon}</span>
+        <span class="voice-status-text">${text}</span>
+        ${sessionState === VoiceState.PAUSED ? `
+          <button class="voice-inline-btn" id="voice-resume">Resume</button>
+        ` : ''}
+      </div>
+      <div class="questions-list">
+        ${questionsHtml}
+      </div>
+      <button class="submit-btn secondary" id="voice-stop">Stop Voice Quiz</button>
+    </div>
+  ` + debugHtml;
+
+  document.getElementById('voice-resume')?.addEventListener('click', () => voiceSession.resume());
+  document.getElementById('voice-stop')?.addEventListener('click', async () => {
+    voiceSession.stop();
+    renderQuestions(contentEl, url, state);
+  });
+
+  // Scroll active question into view
+  const activeQuestion = document.querySelector('.question-item.voice-active');
+  activeQuestion?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function updateQuizTranscript(questionIndex, transcript, isInterim) {
+  const textarea = document.querySelector(`.answer-input[data-index="${questionIndex}"]`);
+  if (textarea) {
+    textarea.value = transcript;
+    textarea.classList.toggle('interim', isInterim);
+  }
 }
 
 function escapeHtml(text) {

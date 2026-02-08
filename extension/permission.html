@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Microphone Permission</title>
+  <style>
+    body {
+      font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    p {
+      font-size: 14px;
+      color: #5f6368;
+      margin-bottom: 24px;
+      max-width: 300px;
+    }
+    button {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+    }
+    .status {
+      margin-top: 24px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+    .status.success {
+      color: #137333;
+    }
+    .status.error {
+      color: #c5221f;
+    }
+  </style>
+</head>
+<body>
+  <div class="icon">🎤</div>
+  <h1>Microphone Access</h1>
+  <p>Read Me needs microphone access for voice quizzes. Click below to grant permission.</p>
+  <button id="request-btn">Allow Microphone</button>
+  <div id="status" class="status"></div>
+  <script src="scripts/permission.js"></script>
+</body>
+</html>

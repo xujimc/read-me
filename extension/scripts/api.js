@@ -41,12 +41,22 @@ export async function fetchFeedback(articleText, answers) {
   return response.json();
 }
 
-export async function fetchNarration(articleText) {
-  const response = await fetch(`${SERVER_URL}/narrate`, {
+export async function fetchTTS(text) {
+  const response = await fetch(`${SERVER_URL}/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ article_text: articleText }),
+    body: JSON.stringify({ text }),
   });
+
+  if (!response.ok) {
+    throw new Error(`Server error: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function fetchSTTToken() {
+  const response = await fetch(`${SERVER_URL}/stt-token`);
 
   if (!response.ok) {
     throw new Error(`Server error: ${response.status}`);
