@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang=en>
+  <head>
+    <title>langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model &#39;gemini-2.0-flash&#39; (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {&#39;error&#39;: {&#39;code&#39;: 429, &#39;message&#39;: &#39;You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 34.349973353s.&#39;, &#39;status&#39;: &#39;RESOURCE_EXHAUSTED&#39;, &#39;details&#39;: [{&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.Help&#39;, &#39;links&#39;: [{&#39;description&#39;: &#39;Learn more about Gemini API quotas&#39;, &#39;url&#39;: &#39;https://ai.google.dev/gemini-api/docs/rate-limits&#39;}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.QuotaFailure&#39;, &#39;violations&#39;: [{&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_input_token_count&#39;, &#39;quotaId&#39;: &#39;GenerateContentInputTokensPerModelPerMinute-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerMinutePerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;model&#39;: &#39;gemini-2.0-flash&#39;, &#39;location&#39;: &#39;global&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerDayPerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.RetryInfo&#39;, &#39;retryDelay&#39;: &#39;34s&#39;}]}}
+ // Werkzeug Debugger</title>
+    <link rel="stylesheet" href="?__debugger__=yes&amp;cmd=resource&amp;f=style.css">
+    <link rel="shortcut icon"
+        href="?__debugger__=yes&amp;cmd=resource&amp;f=console.png">
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=debugger.js"></script>
+    <script>
+      var CONSOLE_MODE = false,
+          EVALEX = true,
+          EVALEX_TRUSTED = false,
+          SECRET = "LG82Rn5ealrjOHdK3AgG";
+    </script>
+  </head>
+  <body style="background-color: #fff">
+    <div class="debugger">
+<h1>ChatGoogleGenerativeAIError</h1>
+<div class="detail">
+  <p class="errormsg">langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model &#39;gemini-2.0-flash&#39; (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {&#39;error&#39;: {&#39;code&#39;: 429, &#39;message&#39;: &#39;You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 34.349973353s.&#39;, &#39;status&#39;: &#39;RESOURCE_EXHAUSTED&#39;, &#39;details&#39;: [{&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.Help&#39;, &#39;links&#39;: [{&#39;description&#39;: &#39;Learn more about Gemini API quotas&#39;, &#39;url&#39;: &#39;https://ai.google.dev/gemini-api/docs/rate-limits&#39;}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.QuotaFailure&#39;, &#39;violations&#39;: [{&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_input_token_count&#39;, &#39;quotaId&#39;: &#39;GenerateContentInputTokensPerModelPerMinute-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerMinutePerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;model&#39;: &#39;gemini-2.0-flash&#39;, &#39;location&#39;: &#39;global&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerDayPerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.RetryInfo&#39;, &#39;retryDelay&#39;: &#39;34s&#39;}]}}
+</p>
+</div>
+<h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
+<div class="traceback">
+  <h3></h3>
+  <ul><li><div class="frame" id="frame-4411440960">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py"</cite>,
+      line <em class="line">3047</em>,
+      in <code class="function">_generate</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>cached_content=cached_content or self.cached_content,</pre>
+<pre class="line before"><span class="ws">            </span>tool_choice=tool_choice,</pre>
+<pre class="line before"><span class="ws">            </span>**kwargs,</pre>
+<pre class="line before"><span class="ws">        </span>)</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line current"><span class="ws">            </span>response: GenerateContentResponse = self.client.models.generate_content(
+<span class="ws">            </span>                                    </pre>
+<pre class="line after"><span class="ws">                </span>**request,</pre>
+<pre class="line after"><span class="ws">            </span>)</pre>
+<pre class="line after"><span class="ws">        </span>except ClientError as e:</pre>
+<pre class="line after"><span class="ws">            </span>_handle_client_error(e, request)</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411588672">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/models.py"</cite>,
+      line <em class="line">5474</em>,
+      in <code class="function">generate_content</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>automatic_function_calling_history: list[types.Content] = []</pre>
+<pre class="line before"><span class="ws">    </span>response = types.GenerateContentResponse()</pre>
+<pre class="line before"><span class="ws">    </span>i = 0</pre>
+<pre class="line before"><span class="ws">    </span>while remaining_remote_calls_afc &gt; 0:</pre>
+<pre class="line before"><span class="ws">      </span>i += 1</pre>
+<pre class="line current"><span class="ws">      </span>response = self._generate_content(
+<span class="ws">      </span>           </pre>
+<pre class="line after"><span class="ws">          </span>model=model, contents=contents, config=parsed_config</pre>
+<pre class="line after"><span class="ws">      </span>)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">      </span>function_map = _extra_utils.get_function_map(parsed_config)</pre>
+<pre class="line after"><span class="ws">      </span>if not function_map:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412131936">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/models.py"</cite>,
+      line <em class="line">4214</em>,
+      in <code class="function">_generate_content</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">      </span>http_options = parameter_model.config.http_options</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>request_dict = _common.convert_to_dict(request_dict)</pre>
+<pre class="line before"><span class="ws">    </span>request_dict = _common.encode_unserializable_types(request_dict)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line current"><span class="ws">    </span>response = self._api_client.request(
+<span class="ws">    </span>           </pre>
+<pre class="line after"><span class="ws">        </span>&#39;post&#39;, path, request_dict, http_options</pre>
+<pre class="line after"><span class="ws">    </span>)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>if config is not None and getattr(</pre>
+<pre class="line after"><span class="ws">        </span>config, &#39;should_return_http_response&#39;, None</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412132080">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py"</cite>,
+      line <em class="line">1386</em>,
+      in <code class="function">request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">      </span>http_options: Optional[HttpOptionsOrDict] = None,</pre>
+<pre class="line before"><span class="ws">  </span>) -&gt; SdkHttpResponse:</pre>
+<pre class="line before"><span class="ws">    </span>http_request = self._build_request(</pre>
+<pre class="line before"><span class="ws">        </span>http_method, path, request_dict, http_options</pre>
+<pre class="line before"><span class="ws">    </span>)</pre>
+<pre class="line current"><span class="ws">    </span>response = self._request(http_request, http_options, stream=False)
+<span class="ws">    </span>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>response_body = (</pre>
+<pre class="line after"><span class="ws">        </span>response.response_stream[0] if response.response_stream else &#39;&#39;</pre>
+<pre class="line after"><span class="ws">    </span>)</pre>
+<pre class="line after"><span class="ws">    </span>return SdkHttpResponse(headers=response.headers, body=response_body)</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412137120">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py"</cite>,
+      line <em class="line">1220</em>,
+      in <code class="function">_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">      </span>)</pre>
+<pre class="line before"><span class="ws">      </span># Support per request retry options.</pre>
+<pre class="line before"><span class="ws">      </span>if parameter_model.retry_options:</pre>
+<pre class="line before"><span class="ws">        </span>retry_kwargs = retry_args(parameter_model.retry_options)</pre>
+<pre class="line before"><span class="ws">        </span>retry = tenacity.Retrying(**retry_kwargs)</pre>
+<pre class="line current"><span class="ws">        </span>return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">  </span>async def _async_request_once(</pre>
+<pre class="line after"><span class="ws">      </span>self, http_request: HttpRequest, stream: bool = False</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412137264">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py"</cite>,
+      line <em class="line">470</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>) -&gt; WrappedFnReturnT:</pre>
+<pre class="line before"><span class="ws">        </span>self.begin()</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>retry_state = RetryCallState(retry_object=self, fn=fn, args=args, kwargs=kwargs)</pre>
+<pre class="line before"><span class="ws">        </span>while True:</pre>
+<pre class="line current"><span class="ws">            </span>do = self.iter(retry_state=retry_state)
+<span class="ws">            </span>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>if isinstance(do, DoAttempt):</pre>
+<pre class="line after"><span class="ws">                </span>try:</pre>
+<pre class="line after"><span class="ws">                    </span>result = fn(*args, **kwargs)</pre>
+<pre class="line after"><span class="ws">                </span>except BaseException:  # noqa: B902</pre>
+<pre class="line after"><span class="ws">                    </span>retry_state.set_exception(sys.exc_info())  # type: ignore[arg-type]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412140144">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py"</cite>,
+      line <em class="line">371</em>,
+      in <code class="function">iter</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def iter(self, retry_state: &#34;RetryCallState&#34;) -&gt; t.Union[DoAttempt, DoSleep, t.Any]:  # noqa</pre>
+<pre class="line before"><span class="ws">        </span>self._begin_iter(retry_state)</pre>
+<pre class="line before"><span class="ws">        </span>result = None</pre>
+<pre class="line before"><span class="ws">        </span>for action in self.iter_state.actions:</pre>
+<pre class="line current"><span class="ws">            </span>result = action(retry_state)
+<span class="ws">            </span>         ^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>return result</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def _begin_iter(self, retry_state: &#34;RetryCallState&#34;) -&gt; None:  # noqa</pre>
+<pre class="line after"><span class="ws">        </span>self.iter_state.reset()</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412140288">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py"</cite>,
+      line <em class="line">413</em>,
+      in <code class="function">exc_check</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">            </span>def exc_check(rs: &#34;RetryCallState&#34;) -&gt; None:</pre>
+<pre class="line before"><span class="ws">                </span>fut = t.cast(Future, rs.outcome)</pre>
+<pre class="line before"><span class="ws">                </span>retry_exc = self.retry_error_cls(fut)</pre>
+<pre class="line before"><span class="ws">                </span>if self.reraise:</pre>
+<pre class="line current"><span class="ws">                    </span>raise retry_exc.reraise()
+<span class="ws">                    </span>      ^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">                </span>raise retry_exc from fut.exception()</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">            </span>self._add_action_func(exc_check)</pre>
+<pre class="line after"><span class="ws">            </span>return</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412140432">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py"</cite>,
+      line <em class="line">184</em>,
+      in <code class="function">reraise</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>self.last_attempt = last_attempt</pre>
+<pre class="line before"><span class="ws">        </span>super().__init__(last_attempt)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def reraise(self) -&gt; t.NoReturn:</pre>
+<pre class="line before"><span class="ws">        </span>if self.last_attempt.failed:</pre>
+<pre class="line current"><span class="ws">            </span>raise self.last_attempt.result()
+<span class="ws">            </span>      ^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>raise self</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def __str__(self) -&gt; str:</pre>
+<pre class="line after"><span class="ws">        </span>return f&#34;{self.__class__.__name__}[{self.last_attempt}]&#34;</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412140576">
+  <h4>File <cite class="filename">"/opt/homebrew/Cellar/python@3.11/3.11.14_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py"</cite>,
+      line <em class="line">449</em>,
+      in <code class="function">result</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>with self._condition:</pre>
+<pre class="line before"><span class="ws">                </span>if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:</pre>
+<pre class="line before"><span class="ws">                    </span>raise CancelledError()</pre>
+<pre class="line before"><span class="ws">                </span>elif self._state == FINISHED:</pre>
+<pre class="line current"><span class="ws">                    </span>return self.__get_result()
+<span class="ws">                    </span>       ^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">                </span>self._condition.wait(timeout)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">                </span>if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:</pre>
+<pre class="line after"><span class="ws">                    </span>raise CancelledError()</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412143168">
+  <h4>File <cite class="filename">"/opt/homebrew/Cellar/python@3.11/3.11.14_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py"</cite>,
+      line <em class="line">401</em>,
+      in <code class="function">__get_result</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>return self._state in [CANCELLED, CANCELLED_AND_NOTIFIED, FINISHED]</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def __get_result(self):</pre>
+<pre class="line before"><span class="ws">        </span>if self._exception:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line current"><span class="ws">                </span>raise self._exception
+<span class="ws">                </span>^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>finally:</pre>
+<pre class="line after"><span class="ws">                </span># Break a reference cycle with the exception in self._exception</pre>
+<pre class="line after"><span class="ws">                </span>self = None</pre>
+<pre class="line after"><span class="ws">        </span>else:</pre>
+<pre class="line after"><span class="ws">            </span>return self._result</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412143312">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py"</cite>,
+      line <em class="line">473</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>retry_state = RetryCallState(retry_object=self, fn=fn, args=args, kwargs=kwargs)</pre>
+<pre class="line before"><span class="ws">        </span>while True:</pre>
+<pre class="line before"><span class="ws">            </span>do = self.iter(retry_state=retry_state)</pre>
+<pre class="line before"><span class="ws">            </span>if isinstance(do, DoAttempt):</pre>
+<pre class="line before"><span class="ws">                </span>try:</pre>
+<pre class="line current"><span class="ws">                    </span>result = fn(*args, **kwargs)
+<span class="ws">                    </span>         ^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">                </span>except BaseException:  # noqa: B902</pre>
+<pre class="line after"><span class="ws">                    </span>retry_state.set_exception(sys.exc_info())  # type: ignore[arg-type]</pre>
+<pre class="line after"><span class="ws">                </span>else:</pre>
+<pre class="line after"><span class="ws">                    </span>retry_state.set_result(result)</pre>
+<pre class="line after"><span class="ws">            </span>elif isinstance(do, DoSleep):</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412143456">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py"</cite>,
+      line <em class="line">1199</em>,
+      in <code class="function">_request_once</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">          </span>url=http_request.url,</pre>
+<pre class="line before"><span class="ws">          </span>headers=http_request.headers,</pre>
+<pre class="line before"><span class="ws">          </span>content=data,</pre>
+<pre class="line before"><span class="ws">          </span>timeout=http_request.timeout,</pre>
+<pre class="line before"><span class="ws">      </span>)</pre>
+<pre class="line current"><span class="ws">      </span>errors.APIError.raise_for_response(response)
+<span class="ws">      </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">      </span>return HttpResponse(</pre>
+<pre class="line after"><span class="ws">          </span>response.headers, response if stream else [response.text]</pre>
+<pre class="line after"><span class="ws">      </span>)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">  </span>def _request(</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412143600">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/errors.py"</cite>,
+      line <em class="line">134</em>,
+      in <code class="function">raise_for_response</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>&#39;status&#39;: response.reason_phrase,</pre>
+<pre class="line before"><span class="ws">        </span>}</pre>
+<pre class="line before"><span class="ws">    </span>else:</pre>
+<pre class="line before"><span class="ws">      </span>response_json = response.body_segments[0].get(&#39;error&#39;, {})</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line current"><span class="ws">    </span>cls.raise_error(response.status_code, response_json, response)
+<span class="ws">    </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">  </span>@classmethod</pre>
+<pre class="line after"><span class="ws">  </span>def raise_error(</pre>
+<pre class="line after"><span class="ws">      </span>cls,</pre>
+<pre class="line after"><span class="ws">      </span>status_code: int,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4412144176">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/errors.py"</cite>,
+      line <em class="line">159</em>,
+      in <code class="function">raise_error</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">      </span>ClientError: If the status code is in the 4xx range.</pre>
+<pre class="line before"><span class="ws">      </span>ServerError: If the status code is in the 5xx range.</pre>
+<pre class="line before"><span class="ws">      </span>APIError: For other error status codes.</pre>
+<pre class="line before"><span class="ws">    </span>&#34;&#34;&#34;</pre>
+<pre class="line before"><span class="ws">    </span>if 400 &lt;= status_code &lt; 500:</pre>
+<pre class="line current"><span class="ws">      </span>raise ClientError(status_code, response_json, response)
+<span class="ws">      </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>elif 500 &lt;= status_code &lt; 600:</pre>
+<pre class="line after"><span class="ws">      </span>raise ServerError(status_code, response_json, response)</pre>
+<pre class="line after"><span class="ws">    </span>else:</pre>
+<pre class="line after"><span class="ws">      </span>raise cls(status_code, response_json, response)</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="exc-divider">The above exception was the direct cause of the following exception:</div>
+<li><div class="frame" id="frame-4408572176">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">2213</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>def __call__(self, environ: dict, start_response: t.Callable) -&gt; t.Any:</pre>
+<pre class="line before"><span class="ws">        </span>&#34;&#34;&#34;The WSGI server calls the Flask application object as the</pre>
+<pre class="line before"><span class="ws">        </span>WSGI application. This calls :meth:`wsgi_app`, which can be</pre>
+<pre class="line before"><span class="ws">        </span>wrapped to apply middleware.</pre>
+<pre class="line before"><span class="ws">        </span>&#34;&#34;&#34;</pre>
+<pre class="line current"><span class="ws">        </span>return self.wsgi_app(environ, start_response)
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410921536">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">2193</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line before"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line before"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line before"><span class="ws">                </span>error = e</pre>
+<pre class="line current"><span class="ws">                </span>response = self.handle_exception(e)
+<span class="ws">                </span>           ^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>except:  # noqa: B001</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre>
+<pre class="line after"><span class="ws">                </span>raise</pre>
+<pre class="line after"><span class="ws">            </span>return response(environ, start_response)</pre>
+<pre class="line after"><span class="ws">        </span>finally:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410921680">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">2190</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>ctx = self.request_context(environ)</pre>
+<pre class="line before"><span class="ws">        </span>error: BaseException | None = None</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line current"><span class="ws">                </span>response = self.full_dispatch_request()
+<span class="ws">                </span>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">                </span>error = e</pre>
+<pre class="line after"><span class="ws">                </span>response = self.handle_exception(e)</pre>
+<pre class="line after"><span class="ws">            </span>except:  # noqa: B001</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410921824">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">1486</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>request_started.send(self, _async_wrapper=self.ensure_sync)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line before"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line before"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line current"><span class="ws">            </span>rv = self.handle_user_exception(e)
+<span class="ws">            </span>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(</pre>
+<pre class="line after"><span class="ws">        </span>self,</pre>
+<pre class="line after"><span class="ws">        </span>rv: ft.ResponseReturnValue | HTTPException,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410921968">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">1484</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>request_started.send(self, _async_wrapper=self.ensure_sync)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line current"><span class="ws">                </span>rv = self.dispatch_request()
+<span class="ws">                </span>     ^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410922112">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py"</cite>,
+      line <em class="line">1469</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>and req.method == &#34;OPTIONS&#34;</pre>
+<pre class="line before"><span class="ws">        </span>):</pre>
+<pre class="line before"><span class="ws">            </span>return self.make_default_options_response()</pre>
+<pre class="line before"><span class="ws">        </span># otherwise dispatch to the handler for that endpoint</pre>
+<pre class="line before"><span class="ws">        </span>view_args: dict[str, t.Any] = req.view_args  # type: ignore[assignment]</pre>
+<pre class="line current"><span class="ws">        </span>return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def full_dispatch_request(self) -&gt; Response:</pre>
+<pre class="line after"><span class="ws">        </span>&#34;&#34;&#34;Dispatches the request and on top of that performs request</pre>
+<pre class="line after"><span class="ws">        </span>pre and postprocessing as well as HTTP exception catching and</pre>
+<pre class="line after"><span class="ws">        </span>error handling.</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410922256">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/main.py"</cite>,
+      line <em class="line">17</em>,
+      in <code class="function">ingest_article</code></h4>
+  <div class="source "><pre class="line before"><span class="ws">    </span>body = request.get_json() or {}</pre>
+<pre class="line before"><span class="ws">    </span>text = body.get(&#34;article_text&#34;, &#34;&#34;)</pre>
+<pre class="line before"><span class="ws">    </span>if not text:</pre>
+<pre class="line before"><span class="ws">        </span>return jsonify({&#34;error&#34;: &#34;article_text required&#34;}), 400</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line current"><span class="ws">    </span>questions = generate_questions(text)
+<span class="ws">    </span>            ^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>return jsonify({&#34;questions&#34;: questions})</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>@app.post(&#34;/feedback&#34;)</pre>
+<pre class="line after"><span class="ws"></span>def feedback_endpoint():</pre>
+<pre class="line after"><span class="ws">    </span>body = request.get_json() or {}</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410922400">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/questions.py"</cite>,
+      line <em class="line">15</em>,
+      in <code class="function">generate_questions</code></h4>
+  <div class="source "><pre class="line before"><span class="ws"></span>Return ONE question per line. No extra commentary.</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws"></span>ARTICLE:</pre>
+<pre class="line before"><span class="ws"></span>{article_text}</pre>
+<pre class="line before"><span class="ws"></span>&#34;&#34;&#34;</pre>
+<pre class="line current"><span class="ws">    </span>resp = llm.invoke(prompt)
+<span class="ws">    </span>       ^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>raw = (resp.content or &#34;&#34;).strip()</pre>
+<pre class="line after"><span class="ws">    </span>return [line.strip() for line in raw.split(&#34;\n&#34;) if line.strip()]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4410922544">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py"</cite>,
+      line <em class="line">2535</em>,
+      in <code class="function">invoke</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">            </span>else:</pre>
+<pre class="line before"><span class="ws">                </span>msg = &#34;Tools are already defined.code_execution tool can&#39;t be defined&#34;</pre>
+<pre class="line before"><span class="ws">                </span>raise ValueError(msg)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line current"><span class="ws">        </span>return super().invoke(input, config, stop=stop, **kwargs)
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def _get_ls_params(</pre>
+<pre class="line after"><span class="ws">        </span>self, stop: list[str] | None = None, **kwargs: Any</pre>
+<pre class="line after"><span class="ws">    </span>) -&gt; LangSmithParams:</pre>
+<pre class="line after"><span class="ws">        </span>&#34;&#34;&#34;Get standard params for tracing.&#34;&#34;&#34;</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411340784">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py"</cite>,
+      line <em class="line">402</em>,
+      in <code class="function">invoke</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>config = ensure_config(config)</pre>
+<pre class="line before"><span class="ws">        </span>return cast(</pre>
+<pre class="line before"><span class="ws">            </span>&#34;AIMessage&#34;,</pre>
+<pre class="line before"><span class="ws">            </span>cast(</pre>
+<pre class="line before"><span class="ws">                </span>&#34;ChatGeneration&#34;,</pre>
+<pre class="line current"><span class="ws">                </span>self.generate_prompt(
+<span class="ws">                </span>^</pre>
+<pre class="line after"><span class="ws">                    </span>[self._convert_input(input)],</pre>
+<pre class="line after"><span class="ws">                    </span>stop=stop,</pre>
+<pre class="line after"><span class="ws">                    </span>callbacks=config.get(&#34;callbacks&#34;),</pre>
+<pre class="line after"><span class="ws">                    </span>tags=config.get(&#34;tags&#34;),</pre>
+<pre class="line after"><span class="ws">                    </span>metadata=config.get(&#34;metadata&#34;),</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411440240">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py"</cite>,
+      line <em class="line">1121</em>,
+      in <code class="function">generate_prompt</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>stop: list[str] | None = None,</pre>
+<pre class="line before"><span class="ws">        </span>callbacks: Callbacks = None,</pre>
+<pre class="line before"><span class="ws">        </span>**kwargs: Any,</pre>
+<pre class="line before"><span class="ws">    </span>) -&gt; LLMResult:</pre>
+<pre class="line before"><span class="ws">        </span>prompt_messages = [p.to_messages() for p in prompts]</pre>
+<pre class="line current"><span class="ws">        </span>return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>@override</pre>
+<pre class="line after"><span class="ws">    </span>async def agenerate_prompt(</pre>
+<pre class="line after"><span class="ws">        </span>self,</pre>
+<pre class="line after"><span class="ws">        </span>prompts: list[PromptValue],</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411440384">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py"</cite>,
+      line <em class="line">931</em>,
+      in <code class="function">generate</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>_normalize_messages(message_list) for message_list in messages</pre>
+<pre class="line before"><span class="ws">        </span>]</pre>
+<pre class="line before"><span class="ws">        </span>for i, m in enumerate(input_messages):</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>results.append(</pre>
+<pre class="line current"><span class="ws">                    </span>self._generate_with_cache(
+<span class="ws">                    </span>^</pre>
+<pre class="line after"><span class="ws">                        </span>m,</pre>
+<pre class="line after"><span class="ws">                        </span>stop=stop,</pre>
+<pre class="line after"><span class="ws">                        </span>run_manager=run_managers[i] if run_managers else None,</pre>
+<pre class="line after"><span class="ws">                        </span>**kwargs,</pre>
+<pre class="line after"><span class="ws">                    </span>)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411440528">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py"</cite>,
+      line <em class="line">1233</em>,
+      in <code class="function">_generate_with_cache</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">                </span>if run_manager:</pre>
+<pre class="line before"><span class="ws">                    </span>run_manager.on_llm_new_token(&#34;&#34;, chunk=chunk)</pre>
+<pre class="line before"><span class="ws">                </span>chunks.append(chunk)</pre>
+<pre class="line before"><span class="ws">            </span>result = generate_from_stream(iter(chunks))</pre>
+<pre class="line before"><span class="ws">        </span>elif inspect.signature(self._generate).parameters.get(&#34;run_manager&#34;):</pre>
+<pre class="line current"><span class="ws">            </span>result = self._generate(
+<span class="ws">            </span>         </pre>
+<pre class="line after"><span class="ws">                </span>messages, stop=stop, run_manager=run_manager, **kwargs</pre>
+<pre class="line after"><span class="ws">            </span>)</pre>
+<pre class="line after"><span class="ws">        </span>else:</pre>
+<pre class="line after"><span class="ws">            </span>result = self._generate(messages, stop=stop, **kwargs)</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411440672">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py"</cite>,
+      line <em class="line">3051</em>,
+      in <code class="function">_generate</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>response: GenerateContentResponse = self.client.models.generate_content(</pre>
+<pre class="line before"><span class="ws">                </span>**request,</pre>
+<pre class="line before"><span class="ws">            </span>)</pre>
+<pre class="line before"><span class="ws">        </span>except ClientError as e:</pre>
+<pre class="line current"><span class="ws">            </span>_handle_client_error(e, request)
+<span class="ws">            </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">        </span>return _response_to_result(response)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>async def _agenerate(</pre>
+<pre class="line after"><span class="ws">        </span>self,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-4411440816">
+  <h4>File <cite class="filename">"/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py"</cite>,
+      line <em class="line">145</em>,
+      in <code class="function">_handle_client_error</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>Raises:</pre>
+<pre class="line before"><span class="ws">        </span>ChatGoogleGenerativeAIError: Always raised with formatted error message.</pre>
+<pre class="line before"><span class="ws">    </span>&#34;&#34;&#34;</pre>
+<pre class="line before"><span class="ws">    </span>model_name = request.get(&#34;model&#34;, &#34;unknown&#34;)</pre>
+<pre class="line before"><span class="ws">    </span>msg = f&#34;Error calling model &#39;{model_name}&#39; ({e.status}): {e}&#34;</pre>
+<pre class="line current"><span class="ws">    </span>raise ChatGoogleGenerativeAIError(msg) from e
+<span class="ws">    </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>def _get_default_model_profile(model_name: str) -&gt; ModelProfile:</pre>
+<pre class="line after"><span class="ws">    </span>default = _MODEL_PROFILES.get(model_name) or {}</pre>
+<pre class="line after"><span class="ws">    </span>return default.copy()</pre></div>
+</div>
+</ul>
+  <blockquote>langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model &#39;gemini-2.0-flash&#39; (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {&#39;error&#39;: {&#39;code&#39;: 429, &#39;message&#39;: &#39;You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 34.349973353s.&#39;, &#39;status&#39;: &#39;RESOURCE_EXHAUSTED&#39;, &#39;details&#39;: [{&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.Help&#39;, &#39;links&#39;: [{&#39;description&#39;: &#39;Learn more about Gemini API quotas&#39;, &#39;url&#39;: &#39;https://ai.google.dev/gemini-api/docs/rate-limits&#39;}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.QuotaFailure&#39;, &#39;violations&#39;: [{&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_input_token_count&#39;, &#39;quotaId&#39;: &#39;GenerateContentInputTokensPerModelPerMinute-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerMinutePerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;model&#39;: &#39;gemini-2.0-flash&#39;, &#39;location&#39;: &#39;global&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerDayPerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.RetryInfo&#39;, &#39;retryDelay&#39;: &#39;34s&#39;}]}}
+</blockquote>
+</div>
+
+<div class="plain">
+    <p>
+      This is the Copy/Paste friendly version of the traceback.
+    </p>
+    <textarea cols="50" rows="10" name="code" readonly>Traceback (most recent call last):
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py&#34;, line 3047, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/models.py&#34;, line 5474, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/models.py&#34;, line 4214, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py&#34;, line 1386, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py&#34;, line 1220, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py&#34;, line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py&#34;, line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py&#34;, line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py&#34;, line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/opt/homebrew/Cellar/python@3.11/3.11.14_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py&#34;, line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File &#34;/opt/homebrew/Cellar/python@3.11/3.11.14_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py&#34;, line 401, in __get_result
+    raise self._exception
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/tenacity/__init__.py&#34;, line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/_api_client.py&#34;, line 1199, in _request_once
+    errors.APIError.raise_for_response(response)
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/errors.py&#34;, line 134, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/google/genai/errors.py&#34;, line 159, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {&#39;error&#39;: {&#39;code&#39;: 429, &#39;message&#39;: &#39;You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 34.349973353s.&#39;, &#39;status&#39;: &#39;RESOURCE_EXHAUSTED&#39;, &#39;details&#39;: [{&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.Help&#39;, &#39;links&#39;: [{&#39;description&#39;: &#39;Learn more about Gemini API quotas&#39;, &#39;url&#39;: &#39;https://ai.google.dev/gemini-api/docs/rate-limits&#39;}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.QuotaFailure&#39;, &#39;violations&#39;: [{&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_input_token_count&#39;, &#39;quotaId&#39;: &#39;GenerateContentInputTokensPerModelPerMinute-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerMinutePerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;model&#39;: &#39;gemini-2.0-flash&#39;, &#39;location&#39;: &#39;global&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerDayPerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.RetryInfo&#39;, &#39;retryDelay&#39;: &#39;34s&#39;}]}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 2213, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 2193, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/flask/app.py&#34;, line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/main.py&#34;, line 17, in ingest_article
+    questions = generate_questions(text)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/questions.py&#34;, line 15, in generate_questions
+    resp = llm.invoke(prompt)
+           ^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py&#34;, line 2535, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py&#34;, line 402, in invoke
+    self.generate_prompt(
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py&#34;, line 1121, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py&#34;, line 931, in generate
+    self._generate_with_cache(
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py&#34;, line 1233, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py&#34;, line 3051, in _generate
+    _handle_client_error(e, request)
+  File &#34;/Users/jimmy.xu/Documents/read-me/server/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py&#34;, line 145, in _handle_client_error
+    raise ChatGoogleGenerativeAIError(msg) from e
+langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model &#39;gemini-2.0-flash&#39; (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {&#39;error&#39;: {&#39;code&#39;: 429, &#39;message&#39;: &#39;You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 34.349973353s.&#39;, &#39;status&#39;: &#39;RESOURCE_EXHAUSTED&#39;, &#39;details&#39;: [{&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.Help&#39;, &#39;links&#39;: [{&#39;description&#39;: &#39;Learn more about Gemini API quotas&#39;, &#39;url&#39;: &#39;https://ai.google.dev/gemini-api/docs/rate-limits&#39;}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.QuotaFailure&#39;, &#39;violations&#39;: [{&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_input_token_count&#39;, &#39;quotaId&#39;: &#39;GenerateContentInputTokensPerModelPerMinute-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerMinutePerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;model&#39;: &#39;gemini-2.0-flash&#39;, &#39;location&#39;: &#39;global&#39;}}, {&#39;quotaMetric&#39;: &#39;generativelanguage.googleapis.com/generate_content_free_tier_requests&#39;, &#39;quotaId&#39;: &#39;GenerateRequestsPerDayPerProjectPerModel-FreeTier&#39;, &#39;quotaDimensions&#39;: {&#39;location&#39;: &#39;global&#39;, &#39;model&#39;: &#39;gemini-2.0-flash&#39;}}]}, {&#39;@type&#39;: &#39;type.googleapis.com/google.rpc.RetryInfo&#39;, &#39;retryDelay&#39;: &#39;34s&#39;}]}}
+</textarea>
+</div>
+<div class="explanation">
+  The debugger caught an exception in your WSGI application.  You can now
+  look at the traceback which led to the error.  <span class="nojavascript">
+  If you enable JavaScript you can also use additional features such as code
+  execution (if the evalex feature is enabled), automatic pasting of the
+  exceptions and much more.</span>
+</div>
+      <div class="footer">
+        Brought to you by <strong class="arthur">DON'T PANIC</strong>, your
+        friendly Werkzeug powered traceback interpreter.
+      </div>
+    </div>
+
+    <div class="pin-prompt">
+      <div class="inner">
+        <h3>Console Locked</h3>
+        <p>
+          The console is locked and needs to be unlocked by entering the PIN.
+          You can find the PIN printed out on the standard output of your
+          shell that runs the server.
+        <form>
+          <p>PIN:
+            <input type=text name=pin size=14>
+            <input type=submit name=btn value="Confirm Pin">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

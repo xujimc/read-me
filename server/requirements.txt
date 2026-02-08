@@ -1,0 +1,4 @@
+Flask==2.3.2
+python-dotenv==1.0.0
+langchain==1.2.8
+langchain-google-genai==4.2.0
