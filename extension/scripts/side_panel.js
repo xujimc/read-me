@@ -42,11 +42,19 @@ function renderArticles(articles) {
   `).join('') + ctaHtml + debugHtml;
 
   // Add click handlers
-  document.querySelectorAll('.card').forEach(card => {
+  document.querySelectorAll('.card[data-link]').forEach(card => {
     card.addEventListener('click', async () => {
       const link = card.dataset.link;
       if (link) {
-        chrome.tabs.create({ url: link });
+        const newTab = await chrome.tabs.create({ url: link });
+        // Switch side panel for the new tab
+        await chrome.sidePanel.setOptions({
+          tabId: newTab.id,
+          path: 'side_panel_blog.html',
+          enabled: true
+        });
+        chrome.sidePanel.open({ tabId: newTab.id });
+        // Mark as opened
         const { storedArticles = [] } = await chrome.storage.sync.get(['storedArticles']);
         const article = storedArticles.find(a => a.link === link);
         if (article) {

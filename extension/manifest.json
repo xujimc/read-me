@@ -9,6 +9,7 @@
   "background": {
     "service_worker": "scripts/background.js"
   },
+  "host_permissions": ["https://blog.google/*"],
   "permissions": [
     "sidePanel",
     "alarms",

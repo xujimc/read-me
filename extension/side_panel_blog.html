@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', sans-serif;
+      background: #fff;
+      min-height: 100vh;
+    }
+    .header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+    }
+    .content {
+      padding: 16px;
+    }
+    .blog-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    .summary-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .summary-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #1a73e8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .summary-text {
+      font-size: 14px;
+      color: #202124;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Article View</div>
+  <div class="content">
+    <div class="blog-title" id="title">Loading...</div>
+    <div class="summary-card">
+      <div class="summary-label">Summary</div>
+      <div class="summary-text" id="summary">Summary will appear here once connected to Gemini API.</div>
+    </div>
+  </div>
+  <script src="scripts/side_panel_blog.js"></script>
+</body>
+</html>
