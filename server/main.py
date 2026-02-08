@@ -24,9 +24,13 @@ def articles():
     questions = get_cached_questions(article_text)
     cached = questions is not None
 
-    if not cached:
+    if cached:
+        print(f"[/articles] Cache HIT - returning cached questions")
+    else:
+        print(f"[/articles] Cache MISS - calling LLM...")
         questions = generate_questions(article_text)
         cache_questions(article_text, questions)
+        print(f"[/articles] Generated {len(questions)} questions")
 
     return jsonify({
         "questions": questions,
@@ -43,9 +47,11 @@ def feedback():
     if not article_text or not answers:
         return jsonify({"error": "article_text and answers required"}), 400
 
+    print(f"[/feedback] Calling LLM for {len(answers)} answers...")
     fb = generate_feedback(article_text, answers)
+    print(f"[/feedback] Done")
     return jsonify({"feedback": fb})
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run(debug=False, port=8000)
